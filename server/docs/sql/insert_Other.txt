@@ -5,6 +5,8 @@
 #delete from Other;
 #ALTER TABLE Other AUTO_INCREMENT = 1;
 
+use knock;
+
 /* 1. 런던에서 온 시인 비슷한 유형 */
 INSERT INTO Other(c_id, id, similar) VALUES(1, 2, 1);
 INSERT INTO Other(c_id, id, similar) VALUES(1, 3, 1);

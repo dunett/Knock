@@ -2,6 +2,8 @@
 #delete from Inspect;
 #ALTER TABLE Inspect AUTO_INCREMENT=1;
 
+use knock;
+
 INSERT INTO Inspect(question, answer1, answer2) values('나는 평소에_사람들과 어울리는 편이다', '상상력이 풍부한', '현실감각이 있는');
 INSERT INTO Inspect(question, answer1, answer2) values('나는 대체로_중요시한다', '정서보다 논리를', '논리보다 정서를');
 INSERT INTO Inspect(question, answer1, answer2) values('내가 친구로 사귀고 싶은 사람은_사람이다', '기발한 아이디어를 내는', '현실감각이 있는');

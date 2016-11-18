@@ -2,6 +2,8 @@
 #delete from Characters;
 #ALTER TABLE Characters AUTO_INCREMENT=1;
 
+use knock;
+
 INSERT INTO Characters(type, image, description) VALUES('런던에서 온 시인', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
 INSERT INTO Characters(type, image, description) VALUES('파리에 사는 사진가', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
 INSERT INTO Characters(type, image, description) VALUES('아이슬란드의 요리사', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');

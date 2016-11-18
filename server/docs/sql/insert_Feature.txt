@@ -4,6 +4,8 @@
 #select * from Feature where c_id = 1;
 #select * from Characters;
 
+use knock;
+
 /* 1. 런던에서 온 시인 */
 INSERT INTO Feature(c_id, f_type) VALUES(1, '상상력');
 INSERT INTO Feature(c_id, f_type) VALUES(1, '다정한 칭찬');
