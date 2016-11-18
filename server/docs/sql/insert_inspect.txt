@@ -1,0 +1,30 @@
+﻿#select * from Inspect;
+#delete from Inspect;
+#ALTER TABLE Inspect AUTO_INCREMENT=1;
+
+INSERT INTO Inspect(question, answer1, answer2) values('나는 평소에_사람들과 어울리는 편이다', '상상력이 풍부한', '현실감각이 있는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 대체로_중요시한다', '정서보다 논리를', '논리보다 정서를');
+INSERT INTO Inspect(question, answer1, answer2) values('내가 친구로 사귀고 싶은 사람은_사람이다', '기발한 아이디어를 내는', '현실감각이 있는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는_더 내세우는 편이다', '이성보다 감정을', '감정보다 이성을');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 대체로_과목을 좋아하는 편이다', '사실과 숫자를 다루는', '개념과 원리를 다루는');
+INSERT INTO Inspect(question, answer1, answer2) values('독서를 할 때 나는_내용을 좋아한다', '뜻하는 바가 정확한', '독특하고 독창적인');
+INSERT INTO Inspect(question, answer1, answer2) values('나는_사람에게 끌린다', '기발하고 영특한', '상식이 풍부하고 실제적인');
+INSERT INTO Inspect(question, answer1, answer2) values('어떤 결정을 내릴 때, 나에게 중요한 것은_하는 것이다', '사람들의 감정과 의견을 고려', '사실을 검토');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 여행을 떠날 때_타입이다', '계획적인', '자유로운');
+INSERT INTO Inspect(question, answer1, answer2) values('나는_사람이라고 불리고 싶다', '온정적인', '능력이 있는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대로부터_것을 좋아한다', '인정받는 말을 듣는', '선물을 받는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_것을 좋아한다', '나에게 공감하는', '내 부탁에 최선을 다하는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대에게_것을 좋아한다', '고맙다는 말 듣는', '가볍게 포옹 받는');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_나를 더 생각해주는 것이라고 느낀다', '말보다 행동으로 표현할 때', '선물을 줄 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대(와/가)_을 좋아한다', '함께 붙어 앉는 것', '대화 중 나를 바라보는 것');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_가 굉장히 좋다', '내 일에 칭찬할 때', '나에게 전념할 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대(에게/가)_진정한 사랑을 느낀다', '가벼운 신체 접촉을 받을 때', '나를 위해 기꺼이 하기 싫은 일을 해 줄 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는_매우 의미 있다', '사물로 드러난 사랑이', '일상에 대한 충분한 관심이');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_특별함을 느낀다', '나를 어루만져 줄 때', '사려 깊은 선물을 해 줄 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가 내 기분을 이해하기 위해_사랑을 느낀다', '시간을 내 줄 때', '다정한 말을 해 줄 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_때 사랑을 느낀다', '집안일을 도와 줄 때', '끝까지 인내를 가지고 이야기를 들어 줄 때');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대(가/와)_을 좋아한다', '나에 대해 매력적이라고 이야기해 주는 것', '단둘이 보내는 시간');
+INSERT INTO Inspect(question, answer1, answer2) values('나에게 상대방의_특별한 의미가 있다', '지지하는 말은', '선물은 언제나');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대(에게/가)_것을 좋아한다', '작지만 선물 받는 것', '안아주는 것');
+INSERT INTO Inspect(question, answer1, answer2) values('나는 상대가_때 사랑을 느낀다', '나를 도와 줄 때', '매일 가벼운 신체 접촉을 해줄 때');
+

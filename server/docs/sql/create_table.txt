@@ -1,0 +1,124 @@
+﻿CREATE TABLE `Character` (
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `User` (
+  `u_id` int(11) NOT NULL,
+  `email` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `gender` int(11) DEFAULT NULL,
+  `alias` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `area` int(11) DEFAULT NULL,
+  `thumbnail` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `profile` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `job` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `fit` int(11) DEFAULT NULL,
+  `faith` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hobby` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `key` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `c_id` int(11) DEFAULT NULL,
+  `data` datetime DEFAULT NULL,
+  `cookie` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `age_min` int(11) DEFAULT NULL,
+  `age_max` int(11) DEFAULT NULL,
+  PRIMARY KEY (`u_id`),
+  CONSTRAINT `c_id` FOREIGN KEY (`u_id`) REFERENCES `Character` (`c_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Report` (
+  `r_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sender` int(11) DEFAULT NULL,
+  `message` text COLLATE utf8_unicode_ci,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`r_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Relation` (
+  `r_id` int(11) NOT NULL AUTO_INCREMENT,
+  `from` int(11) NOT NULL,
+  `favor_f` tinyint(4) DEFAULT '0',
+  `to` int(11) NOT NULL,
+  `favor_t` tinyint(4) DEFAULT '0',
+  `relation` tinyint(4) DEFAULT '0',
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`r_id`),
+  KEY `RELATION_FK1` (`from`),
+  KEY `RELATION_FK2` (`to`),
+  CONSTRAINT `RELATION_FK1` FOREIGN KEY (`from`) REFERENCES `Character` (`c_id`),
+  CONSTRAINT `RELATION_FK2` FOREIGN KEY (`to`) REFERENCES `Character` (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Quiz` (
+  `q_id` int(11) NOT NULL AUTO_INCREMENT,
+  `question1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `question2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `answer1` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `answer2` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`q_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Other` (
+  `c_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `similar` int(11) NOT NULL,
+  KEY `type_idx` (`c_id`),
+  CONSTRAINT `type` FOREIGN KEY (`c_id`) REFERENCES `Character` (`c_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Notice` (
+  `n_id` int(11) NOT NULL,
+  `title` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `contents` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`n_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Inspect` (
+  `I_id` int(11) NOT NULL AUTO_INCREMENT,
+  `question` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `answer1` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `answer2` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`I_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `History` (
+  `u_id` int(11) NOT NULL,
+  `cost` int(11) NOT NULL,
+  `rest` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`u_id`),
+  CONSTRAINT `History_FK` FOREIGN KEY (`u_id`) REFERENCES `Character` (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Destiny` (
+  `d_id` int(11) NOT NULL AUTO_INCREMENT,
+  `from` int(11) DEFAULT NULL,
+  `to` int(11) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`d_id`),
+  KEY `to_idx` (`to`),
+  KEY `from` (`from`),
+  CONSTRAINT `from` FOREIGN KEY (`from`) REFERENCES `User` (`u_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `to` FOREIGN KEY (`to`) REFERENCES `User` (`u_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Answer` (
+  `u_id` int(11) NOT NULL,
+  `answer` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `q_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`u_id`),
+  KEY `q_id_idx` (`q_id`),
+  CONSTRAINT `q_id` FOREIGN KEY (`q_id`) REFERENCES `Quiz` (`q_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+

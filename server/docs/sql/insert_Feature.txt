@@ -1,0 +1,148 @@
+﻿#select * from Feature;
+#delete from Feature;
+#ALTER TABLE Feature AUTO_INCREMENT = 1;
+#select * from Feature where c_id = 1;
+#select * from Characters;
+
+/* 1. 런던에서 온 시인 */
+INSERT INTO Feature(c_id, f_type) VALUES(1, '상상력');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '다정한 칭찬');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '감사의 표현');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '공상');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '온화한 말투');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '인정해주는 말');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '추상적');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '다정한 말');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '용서하는 말');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '전체적 조망');
+INSERT INTO Feature(c_id, f_type) VALUES(1, '새로운 변화');
+
+
+/* 2. 파리에 사는 사진가 */
+INSERT INTO Feature(c_id, f_type) VALUES(2, '실질적인');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '다정한 칭찬');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '확실함');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '계획적인');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '인정해주는 말');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '감사의 표현');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '실제적인');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '온화한 말투');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '사실');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '격려의 표현');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '이론적인');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '다정한 말');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '결단');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '용서하는 말');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '분별력 있는');
+INSERT INTO Feature(c_id, f_type) VALUES(2, '현실 추구');
+
+/* 3. 아이슬란드의 요리사 */
+INSERT INTO Feature(c_id, f_type) VALUES(3, '상상력');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '진정한 대화');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '공상');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '상대에 대한 집중');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '공감');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '추상적');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '전체적 조망');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '새로운 변화');
+INSERT INTO Feature(c_id, f_type) VALUES(3, '함께하는 활동');
+
+/* 4. 로마의 바리스타 */
+INSERT INTO Feature(c_id, f_type) VALUES(4, '실질적인');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '진정한 대화');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '확실함');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '공감');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '실제적인');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '상대에 대한 집중');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '사실');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '이론적인');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '결단');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '계획적인');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '분별력 있는');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '현실 추구');
+INSERT INTO Feature(c_id, f_type) VALUES(4, '함께하는 활동');
+
+/* 5. 우유니 사막의 소금장수 */
+INSERT INTO Feature(c_id, f_type) VALUES(5, '상상력');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '눈으로 드러나는 관심');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '공상');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '사소한 표현');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '상대에게 도움이 되는 것');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '추상적');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '서프라이즈');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '전체적 조망');
+INSERT INTO Feature(c_id, f_type) VALUES(5, '새로운 변화');
+
+/* 6. 요하네스버그의 세공사 */
+INSERT INTO Feature(c_id, f_type) VALUES(6, '실질적인');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '눈으로 드러나는 관심');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '확실함');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '사소한 표현');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '실제적인');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '사실');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '이론적인');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '상대에게 도움이 되는 것');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '결단');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '계획적인');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '서프라이즈');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '분별력 있는');
+INSERT INTO Feature(c_id, f_type) VALUES(6, '현실 추구');
+
+/* 7. 명왕성에서 온 집사 */
+INSERT INTO Feature(c_id, f_type) VALUES(7, '상상력');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '묵묵한 헌신');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '공상');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '말보다 행동');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '속 깊은 배려');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '추상적');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '사소한 도움');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '전체적 조망');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '일상 생활의 공유');
+INSERT INTO Feature(c_id, f_type) VALUES(7, '새로운 변화');
+
+/* 8. 드레스덴의 가정교사 */
+INSERT INTO Feature(c_id, f_type) VALUES(8, '실질적인');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '묵묵한 헌신');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '말보다 행동');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '확실함');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '속 깊은 배려');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '실제적인');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '사소한 도움');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '사실');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '이론적인');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '결단');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '일상 생활의 공유');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '계획적인');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '분별력 있는');
+INSERT INTO Feature(c_id, f_type) VALUES(8, '현실 추구');
+
+/* 9. 페루의 라마지기 */
+INSERT INTO Feature(c_id, f_type) VALUES(9, '상상력');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '다정한 손길');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '공상');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '따뜻함');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '가능성');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '자상한 터치');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '전체적 조망');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '항상 연결되어 있는 느낌');
+INSERT INTO Feature(c_id, f_type) VALUES(9, '새로운 변화');
+
+/* 10. 피렌체의 가죽장인  */
+INSERT INTO Feature(c_id, f_type) VALUES(10, '실질적인');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '다정한 손길');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '확실함');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '따뜻함');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '실제적인');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '자상한 터치');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '사실');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '이론적인');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '항상 연결되어 있는 느낌');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '결단');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '계획적인');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '분별력 있는');
+INSERT INTO Feature(c_id, f_type) VALUES(10, '현실 추구');

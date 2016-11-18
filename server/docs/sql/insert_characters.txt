@@ -1,0 +1,14 @@
+﻿#select * from Characters;
+#delete from Characters;
+#ALTER TABLE Characters AUTO_INCREMENT=1;
+
+INSERT INTO Characters(type, image, description) VALUES('런던에서 온 시인', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('파리에 사는 사진가', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('아이슬란드의 요리사', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('로마의 바리스타', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('우유니 사막의 소금장수', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('요하네스버그의 세공사', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('명왕성에서 온 집사', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('드레스덴의 가정교사', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('페루의 라마지기', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
+INSERT INTO Characters(type, image, description) VALUES('피렌체의 가죽장인', 'http://www.placehold.it/200x200', 'http://www.placehold.it/1080x1920');
