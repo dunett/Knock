@@ -24,20 +24,20 @@ function showQuiz(req, res, next) {
 }
 
 function addQuiz(req, res, next) {
-    var q1 = req.body.quest1;
-    var q2 = req.body.quest2;
+    var q1 = req.body.question1;
+    var q2 = req.body.question2;
     var a1 = req.body.answer1;
     var a2 = req.body.answer2;
     var date = req.body.date;
 
     var info = {
-        quest1 : q1,
-        quest2 : q2,
+        question1 : q1,
+        question2 : q2,
         answer1 : a1,
         answer2 : a2,
         date : date
     };
-    Quiz.addReview(info, (err, result) => {
+    Quiz.addQuiz(info, (err, result) => {
         if(err){
             return next(err);
         }
