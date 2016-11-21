@@ -31,7 +31,7 @@ function chgKey(req, res, next) {
         cost : key,
         description : des
     };
-    Key.chgKey(id, info, (err, result) => {
+    Key.chgKey(info, (err, result) => {
         if(err){
             return next(err);
         }

@@ -2,7 +2,7 @@ var pool = require('./dbConnection');
 
 class Key {
 }
-
+// 머니보기
 Key.showKey = function(id, cb){
     pool.getConnection(function (err, conn) {
       var sql = 'SELECT money FROM User where u_id = ?';
@@ -23,38 +23,60 @@ Key.showKey = function(id, cb){
       });
    });
 }
-
-Key.cngkey = function(id, info, cb){
+// 머니변동내역
+Key.chgKey = function(info, cb){
     pool.getConnection(function (err, conn) {
-      var sql = 'SELECT money FROM User where u_id = ?';
-      conn.query(sql, id,  function (err, results) {
-         if (err) {
-            err.code = 500;
-            conn.release();
-            return next(err);
-         }
+        conn.beginTransaction(function (err) {
+            var sql1 = 'SELECT money FROM User where u_id = ?';
+            conn.query(sql1, info.u_id, function (err, results){
+                if (err) {
+                    err.code = 500;
+                    conn.release();
+                    return cb(err, {msg: 'failure'});
+                }
 
-         if (results.length == 0) {
-            res.status(404).send({ msg: 'Not Found' });
-            conn.release();
-            return;
-         }
+                if (results.length == 0) {
+                    conn.release();
+                    return cb(err, {msg: 'no result'});
+                }
 
-         var key = results[0];
-         info[rest]=key;
-         
-         (err,conn) =>{
-            if(err){
-                err = 500;
-                return next(err);
-            }
-            var sql = "INSERT INTO History SET ?";
-            conn.query(sql, info, (err, result) =>{
-                conn.release();
-                return cb(null, {msg : "success"});
+                var key = results[0].money;
+                console.log(key);
+                console.log(info.cost);
+                if(key+info.cost>=0){
+                    key = key + info.cost;
+                }else{
+                    return cb(err, {msg: 'no money'});
+                }
+                console.log(key);
+                info.rest = key;
+                console.log(info.rest);
+                ////
+                var sql2 = 'UPDATE User SET money = ? where u_id = ?';
+                conn.query(sql2, [info.rest , info.u_id], function (err, results){
+                    console.log("test")
+                    if (err) {
+                        err.code = 500;
+                        conn.rollback();
+                        conn.release();
+                        return cb(err, {msg: 'failure'});
+                    }
+                    
+                    var sql3 = "INSERT INTO History SET ?"
+                    conn.query(sql3, info, function(err, results){
+                        if (err) {
+                            err.code = 500;
+                            conn.rollback();
+                            conn.release();
+                            return cb(err, {msg: 'failure'});
+                        }
+                        conn.commit();
+                        conn.release();
+                        return cb(err, {msg : 'success'});
+                    });
+                });
             });
-        }
-      });
+        });
    });
 }
 
