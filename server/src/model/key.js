@@ -10,14 +10,14 @@ Key.showKey = function(id, cb){
          if (err) {
             err.code = 500;
             conn.release();
-            return cb(err, {msg:"failure"});
+            return cb(err, {msg:"Failure"});
          }
 
          if (results.length == 0) {
-            return cb(err, {msg:"no result"});
+            return cb(err, {msg:"No result"});
          }
          var money = results[0];
-         money.msg = "success";
+         money.msg = "Success.";
          conn.release();
          return cb(err, money); 
       });
@@ -32,12 +32,12 @@ Key.chgKey = function(info, cb){
                 if (err) {
                     err.code = 500;
                     conn.release();
-                    return cb(err, {msg: 'failure'});
+                    return cb(err, {msg: 'Failure'});
                 }
 
                 if (results.length == 0) {
                     conn.release();
-                    return cb(err, {msg: 'no result'});
+                    return cb(err, {msg: 'No result'});
                 }
 
                 var key = results[0].money;
@@ -46,7 +46,7 @@ Key.chgKey = function(info, cb){
                 if(key+info.cost>=0){
                     key = key + info.cost;
                 }else{
-                    return cb(err, {msg: 'no money'});
+                    return cb(err, {msg: 'No money'});
                 }
                 console.log(key);
                 info.rest = key;
@@ -59,7 +59,7 @@ Key.chgKey = function(info, cb){
                         err.code = 500;
                         conn.rollback();
                         conn.release();
-                        return cb(err, {msg: 'failure'});
+                        return cb(err, {msg: 'Failure'});
                     }
                     
                     var sql3 = "INSERT INTO History SET ?"
@@ -68,11 +68,11 @@ Key.chgKey = function(info, cb){
                             err.code = 500;
                             conn.rollback();
                             conn.release();
-                            return cb(err, {msg: 'failure'});
+                            return cb(err, {msg: 'Failure'});
                         }
                         conn.commit();
                         conn.release();
-                        return cb(err, {msg : 'success'});
+                        return cb(err, {msg : 'Success.'});
                     });
                 });
             });

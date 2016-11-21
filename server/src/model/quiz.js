@@ -10,16 +10,16 @@ Quiz.getQuiz = function(cb){
          if (err) {
             err.code = 500;
             conn.release();
-            return cb(err, {msg: 'failure'});
+            return cb(err, {msg: 'Failure'});
          }
 
          if (results.length == 0) {
             conn.release();
-            return cb(err, {msg: 'no result'});
+            return cb(err, {msg: 'No result'});
          }
 
          var quiz = results[0];
-         quiz.msg="success";
+         quiz.msg="Success";
          //console(quiz);
          conn.release();
          return cb(err, quiz); 
@@ -31,12 +31,12 @@ Quiz.addQuiz = function(info, cb){
     pool.getConnection((err,conn) =>{
         if(err){
             err = 500;
-            return cb(err, {msg: 'failure'});
+            return cb(err, {msg: 'Failure..'});
         }
         var sql = "INSERT INTO Quiz SET ?";
         conn.query(sql, info, (err, result) =>{
             conn.release();
-            return cb(null, {msg : "success"});
+            return cb(null, {msg : "Success"});
         });
     });
 }
@@ -46,12 +46,12 @@ Quiz.addAnswer = function(info, cb){
     pool.getConnection((err,conn) =>{
         if(err){
             err = 500;
-            return cb(err, {msg: 'failure'});
+            return cb(err, {msg: 'Failure.'});
         }
         var sql = "INSERT INTO Answer SET ?";
         conn.query(sql, info, (err, result) =>{
             conn.release();
-            return cb(null, {msg : "success"});
+            return cb(null, {msg : "Success"});
         });
     });
 }
