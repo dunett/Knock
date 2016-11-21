@@ -3,7 +3,7 @@ const fs = require('fs');
 const Key = require('../model/key.js');
 
 // 라우터 얻기
-var router=express.Router();
+const router=express.Router();
 
 router.route('/key/:u_id')
 	.get(showKey)
@@ -12,7 +12,7 @@ router.route('/key/:u_id')
 module.exports = router;
 
 function showKey(req, res, next) {
-    var id = req.params.u_id;
+    const id = req.params.u_id;
     Key.showKey(id, (err,result) => {
         if(err) {
             return next(err);
@@ -22,11 +22,11 @@ function showKey(req, res, next) {
 }
 
 function chgKey(req, res, next) {
-    var id = req.params.u_id;
-    var key = req.body.key;
-    var des = req.body.description;
+    const id = req.params.u_id;
+    const key = req.body.key;
+    const des = req.body.description;
 
-    var info = {
+    const info = {
         u_id : id,
         cost : key,
         description : des

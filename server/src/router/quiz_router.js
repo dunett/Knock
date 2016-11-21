@@ -3,7 +3,7 @@ const fs = require('fs');
 const Quiz = require('../model/quiz.js');
 
 // 라우터 얻기
-var router=express.Router();
+const router=express.Router();
 
 router.route('/quiz')
 	.get(showQuiz)
@@ -24,13 +24,13 @@ function showQuiz(req, res, next) {
 }
 
 function addQuiz(req, res, next) {
-    var q1 = req.body.question1;
-    var q2 = req.body.question2;
-    var a1 = req.body.answer1;
-    var a2 = req.body.answer2;
-    var date = req.body.date;
+    const q1 = req.body.question1;
+    const q2 = req.body.question2;
+    const a1 = req.body.answer1;
+    const a2 = req.body.answer2;
+    const date = req.body.date;
 
-    var info = {
+    const info = {
         question1 : q1,
         question2 : q2,
         answer1 : a1,
@@ -46,18 +46,18 @@ function addQuiz(req, res, next) {
 }
 
 function addAnswer(req, res) {
-    var u_id = req.params.u_id;
-    var q_id = req.body.q_id;
-    var quest1 = req.body.question1;
-    var quest2 = req.body.question2;
-    var answer = req.body.answer;
+    const u_id = req.params.u_id;
+    const q_id = req.body.q_id;
+    const quest1 = req.body.question1;
+    const quest2 = req.body.question2;
+    const answer = req.body.answer;
 
     console.log(q_id);
     console.log(quest1);
     console.log(quest2);
     console.log(answer);
 
-    var info = {
+    const info = {
         u_id : u_id,
         q_id : q_id,
         answer : quest1+ " " + answer + " " + quest2
