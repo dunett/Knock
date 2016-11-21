@@ -19,7 +19,7 @@ function showQuiz(req, res, next) {
         if(err) {
             return next(err);
         }
-        res.send({msg : "success" ,result});
+        res.send(result);
     });
 }
 
@@ -41,7 +41,7 @@ function addQuiz(req, res, next) {
         if(err){
             return next(err);
         }
-        res.send({meg : "success"});
+        res.send(result);
     });
 }
 
@@ -66,7 +66,7 @@ function addAnswer(req, res) {
         if(err){
             return;
         }
-        res.send({meg : "success"});
+        res.send(result);
     });
 }
 

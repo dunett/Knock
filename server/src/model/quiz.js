@@ -10,16 +10,16 @@ Quiz.getQuiz = function(cb){
          if (err) {
             err.code = 500;
             conn.release();
-            return next(err);
+            return cb(err, {msg: 'failure'});
          }
 
          if (results.length == 0) {
-            res.status(404).send({ msg: 'Not Found' });
             conn.release();
-            return;
+            return cb(err, {msg: 'no result'});
          }
 
          var quiz = results[0];
+         quiz.msg="success";
          //console(quiz);
          conn.release();
          return cb(err, quiz); 
@@ -31,7 +31,7 @@ Quiz.addQuiz = function(info, cb){
     pool.getConnection((err,conn) =>{
         if(err){
             err = 500;
-            return next(err);
+            return cb(err, {msg: 'failure'});
         }
         var sql = "INSERT INTO Quiz SET ?";
         conn.query(sql, info, (err, result) =>{
@@ -46,7 +46,7 @@ Quiz.addAnswer = function(info, cb){
     pool.getConnection((err,conn) =>{
         if(err){
             err = 500;
-            return next(err);
+            return cb(err, {msg: 'failure'});
         }
         var sql = "INSERT INTO Answer SET ?";
         conn.query(sql, info, (err, result) =>{
