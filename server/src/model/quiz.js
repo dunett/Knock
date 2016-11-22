@@ -22,7 +22,7 @@ Quiz.getQuiz = function(cb){
          quiz.msg="Success";
          //console(quiz);
          conn.release();
-         return cb(err, quiz); 
+         return cb(null, quiz); 
       });
    });
 }

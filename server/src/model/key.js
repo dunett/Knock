@@ -50,7 +50,7 @@ Key.chgKey = function(info, cb){
                         }
                         conn.commit();
                         conn.release();
-                        return cb(err, {msg : 'Success.'});
+                        return cb(null, {msg : 'Success.'});
                     });
                 });
             });

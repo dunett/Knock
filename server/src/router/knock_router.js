@@ -11,6 +11,12 @@ router.route('/knock/send')
 router.route('/knock/accept/:r_id')
     .put(chgRel);
 
+router.route('/knock/today/:u_id')
+    .get(today);
+
+router.route('/knock/refresh/:u_id')
+    .get(refresh);
+
 module.exports = router;
 
 function addRel(req, res, next) {
@@ -33,6 +39,28 @@ function chgRel(req, res, next) {
     const id = req.params.r_id;
 
     Knock.chgRel(id, (err, result) => {
+        if(err){
+            return next(err);
+        }
+        res.send(result);
+    });
+}
+
+function today(req, res, next){
+    const id = req.params.u_id;
+
+    Knock.today(id, (err, result) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(result);
+    })
+}
+
+function refresh(req, res, next){
+    const id = req.params.u_id;
+
+    Knock.refresh(id, (err, result) =>{
         if(err){
             return next(err);
         }
