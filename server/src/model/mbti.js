@@ -1,4 +1,5 @@
-var pool = require('./dbConnection');
+const pool = require('./dbConnection');
+const async = require('async');
 
 class Mbti {
 }
@@ -16,6 +17,8 @@ const E_Type = 'E';
 const Answer_Char = '0';
 const Answer_Char2 = '1';
 
+const Feature_Random_Count = 7;
+
 Mbti.getMbtiTest = (callback) => {
   pool.getConnection((err, conn) => {
     if (err) {
@@ -30,26 +33,13 @@ Mbti.getMbtiTest = (callback) => {
       }
 
       let result = {};
-      let datas = [];
-
-      // split question into two parts
-      rows.forEach(item => {
-        let questions = item.question.split('_');
-        datas.push({
-          question1: questions[0],
-          question2: questions[1],
-          answer1: item.answer1,
-          answer2: item.answer2
-        });
-      });
-
-      conn.release();
 
       result = {
         msg: 'Success',
-        data: datas
+        data: rows
       };
 
+      conn.release();
       return callback(null, result);
     });
   });
@@ -117,8 +107,10 @@ Mbti.getMyMbtiType = (u_id, callback) => {
       return callback(err);
     }
 
-    // Get type information after joining tables User and Characters  
-    const sql = 'SELECT type, image, description from User as U, Characters as C where U.c_id = C.c_id and U.u_id = ?';
+    // 1. get c_id from User table
+    // 2. get type, image, description from Characters table
+    // 3. get feature from feature table
+    const sql = 'select type, image, description, f_type from Characters as C, Feature as F where C.c_id = F.c_id and C.c_id = (select c_id from User where u_id = ?)';
     conn.query(sql, [u_id], (err, rows) => {
       if (err) {
         conn.release();
@@ -131,10 +123,18 @@ Mbti.getMyMbtiType = (u_id, callback) => {
         result['type'] = rows[0].type;
         result['image'] = rows[0].image;
         result['description'] = rows[0].description;
+
+        // make a feature array 
+        let feature = [];
+        for (let row of rows) {
+          feature.push(row['f_type']);
+        }
+
+        const randomfeature = randomizeFeature(feature);
+        result['feature'] = randomfeature;
       }
 
       conn.release();
-
       return callback(null, result);
     });
   });
@@ -278,6 +278,38 @@ function calculateLoveLanguage(answers, values) {
   } else {
     return maxType1[0];
   }
+}
+
+/**
+ * Params:
+ *  - feature sample: [ 'example01', 'example02' ..., 'example10' ]
+ */
+function randomizeFeature(feature) {
+  if (!(feature instanceof Array)) {
+    return [];
+  }
+
+  let randomIndex = [];
+  let length = feature.length;
+  let result = [];
+
+  // extract randomly
+  while (randomIndex.length < Feature_Random_Count) {
+    let randomNumber = Math.floor(Math.random() * length);
+    if (randomIndex.indexOf(randomNumber) > -1) continue;
+    randomIndex[randomIndex.length] = randomNumber;
+  }
+
+  // sorting
+  randomIndex.sort((value1, value2) => {
+    return value1 - value2;
+  });
+
+  for (let idx of randomIndex) {
+    result.push(feature[idx]);
+  }
+
+  return result;
 }
 
 module.exports = Mbti;

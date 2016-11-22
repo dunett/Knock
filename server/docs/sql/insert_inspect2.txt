@@ -1,0 +1,32 @@
+﻿#select * from Inspect;
+#delete from Inspect;
+#ALTER TABLE Inspect AUTO_INCREMENT=1;
+
+use knock;
+
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'S', 'N');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'S', 'N');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'S', 'N');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'S', 'N');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'N', 'S');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'A', 'C');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'B', 'D');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'A', 'E');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'C', 'D');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'E', 'B');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'A', 'B');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'E', 'D');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'C', 'D');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'E', 'C');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'B', 'A');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'D', 'B');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'A', 'B');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'A', 'C');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'C', 'E');
+INSERT INTO Inspect(question, answer1, answer2, value1, value2) values('http://www.placehold.it/1080x1920', 'http://www.placehold.it/200x200', 'http://www.placehold.it/200x200', 'D', 'E');
+
