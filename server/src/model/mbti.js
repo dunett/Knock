@@ -1,5 +1,4 @@
 const pool = require('./dbConnection');
-const async = require('async');
 
 class Mbti {
 }
