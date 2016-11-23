@@ -55,15 +55,15 @@ Knock.today = function(id, cb){
 }
 
 function selection1(id, conn, td){
-    const sql1 = "SELECT u.u_id FROM User u, Characters c WHERE u.c_id = c.c_id AND u.c_id = (SELECT c_id FROM User WHERE u_id = ?) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) order by rand() limit 1";
-    conn.query(sql1, [id, id], (err, result) =>{
+    const sql1 = "SELECT u.u_id FROM User u, Characters c WHERE u.c_id = c.c_id AND u_id != ? AND u.c_id = (SELECT c_id FROM User WHERE u_id = ?) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) order by rand() limit 1";
+    conn.query(sql1, [id, id, id], (err, result) =>{
         if(err){
             err.code = 500;
-            return td(err,null);
+            return td(err);
         }
         if(result.length == 0){
             err.code = 404;
-            return td(err,null);
+            return td(err);
         }
         const u_id = result[0].u_id;
         console.log(u_id);
@@ -72,9 +72,9 @@ function selection1(id, conn, td){
             if(err){
                 err.code = 500;
                 conn.rollback();
-                return td(err, null);
+                return td(err);
             }
-            return td(null, null);
+            return td(null);
         });
     });
 }
@@ -84,11 +84,11 @@ function selection2(id, conn, td){
     conn.query(sql1, [id, id], (err, result) =>{
         if(err){
             err.code = 500;
-            return td(err,null);
+            return td(err);
         }
         if(result.length == 0){
             err.code = 404;
-            return td(err,null);
+            return td(err);
         }
         const u_id = result[0].u_id;
         const sql2 = "INSERT INTO Destiny SET sender = ?, receiver = ?, type = '성향이 비슷한'";
@@ -96,9 +96,9 @@ function selection2(id, conn, td){
             if(err){
                 err.code = 500;
                 conn.rollback();
-                return td(err, null);
+                return td(err);
             }
-            return td(null, null);
+            return td(null);
         });
     });
 }
@@ -108,11 +108,11 @@ function selection3(id, conn, td){
     conn.query(sql1, [id, id], (err, result) =>{
         if(err){
             err.code = 500;
-            return td(err,null);
+            return td(err);
         }
         if(result.length == 0){
             err.code = 404;
-            return td(err,null);
+            return td(err);
         }
         const u_id = result[0].u_id;
         const sql2 = "INSERT INTO Destiny SET sender = ?, receiver = ?, type = '성향이 다른'";
@@ -120,9 +120,9 @@ function selection3(id, conn, td){
             if(err){
                 err.code = 500;
                 conn.rollback();
-                return td(err, null);
+                return td(err);
             }
-            return td(null, null);
+            return td(null);
         });
     });
 }
@@ -132,38 +132,39 @@ Knock.refresh = function(id, cb){
         async.series(
             [
                 function task1(done) {
-                    selection1(id, conn, function(err, result){
+                    selection1(id, conn, function(err){
                         if(err){
-                            done(err,null);
-                            return;
+                            done(err);
+                        }else{
+                            done(null);
                         }
-                        done(null,null);
                     });
                 },
                 function task2(done) {
-                    selection2(id, conn, function(err, result){
+                    selection2(id, conn, function(err){
                         if(err){
                             done(err,null);
-                            return;
+                        }else{
+                            done(null);
                         }
-                        done(null,null);
                     });
                 },
                 function task3(done) {
-                    selection3(id, conn, function(err, result){
+                    selection3(id, conn, function(err){
                         if(err){
                             done(err,null);
-                            return;
+                        }else{
+                            done(null);
                         }
-                        done(null,null);
                     });
                 },
                 function task4(done) {
                     Knock.today(id, function(err, result){
                         if(err){
                             done(err,null);
+                        }else{
+                            done(null,result);
                         }
-                        done(null,result);
                     })
                 }
             ],
@@ -173,7 +174,7 @@ Knock.refresh = function(id, cb){
                 }
                 conn.commit();
                 conn.release();
-                return cb(null, result);
+                return cb(null, result[3]);
             }
         );
     });
