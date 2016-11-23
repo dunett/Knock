@@ -1,0 +1,25 @@
+﻿$unwind: the location array
+
+// r_id가 1이고 messages 배열에서 from이 1이면서 check가 false 인 것
+db.chats.aggregate([
+    { $match: {'r_id': 1}},
+    { $unwind: '$messages'},
+    { $match: {'messages.from': '1', 'messages.check': false}}
+]);
+
+
+// r_id가 1인것을 찾아서
+// messages라는 배열을 가지고
+// messages배열에 서브도큐먼트에 from이 1인 것을 찾고
+// count를 구한다.
+db.chats.aggregate([
+    { $match: {'r_id': 1}},
+    { $unwind: '$messages'},
+    { $match: {'messages.from': '1', 'messages.check': false}},
+    { $group: { _id: '$r_id'  , count: {$sum: 1}}},
+    //{ $project: { _id: 0, 'count': 1}}
+]);
+
+
+// r_id가 1,2에 속하는 것중에서 messages 배열은 가장 첫번째 것만 
+db.chats.find({r_id: {$in: [1,2]}}, {messages: {$slice: 1}})
