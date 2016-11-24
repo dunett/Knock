@@ -3,16 +3,14 @@ var pool = require('./model/dbConnection');
 var schedule = require('node-schedule');
 
 // Cron Style
-// schedule.scheduleJob('*/10 * * * * *', function(){
-//     refresh((err, result) =>{
-//         console.log(result);
-//         console.log('10초 간격으로 실행 ', new Date());
-//     });
+// schedule.scheduleJob('*/30 * * * * *', function(){
+//     refresh();
+//     console.log("30초마다 실행");
 // });
 
 var rule = new schedule.RecurrenceRule();
-rule.hour = 5;
-//rule.minute = 20;
+rule.hour = 18;
+// //rule.minute = 20;
 
 schedule.scheduleJob(rule, function(){
     refresh();
@@ -99,7 +97,7 @@ function refresh(){
     pool.getConnection(function (err, conn){
         const sql = "SELECT u_id FROM User WHERE status = 1";
         conn.query(sql, (err, results) =>{
-            async.each(results, (item,cb) =>{
+            async.each(results, (item) =>{
                 selection(item.u_id,conn);
             });
         });

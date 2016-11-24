@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var quizRouter = require('./router/quiz_router');
 var keyRouter = require('./router/key_router');
 var knockRouter = require('./router/knock_router');
+var historyRouter = require('./router/history_router');
 
 var app = express();
 //app.use(morgan('dev'));
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(quizRouter);
 app.use(keyRouter);
 app.use(knockRouter);
+app.use(historyRouter);
 
 // 여기까지 오면 - 에러
 app.use(function(req, res, next) {
