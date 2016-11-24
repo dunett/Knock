@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const Chat = require('../model/chat');
-const Chat_Mysql = require('../model/chat_mysql');
+const Relation = require('../model/relation');
 const User = require('../model/user');
 
 /**
  * 채팅 목록
- * GET /chat/:u_id
+ * GET /chat/list/:u_id
  */
-router.get('/chat/:u_id', (req, res, next) => {
+router.get('/chat/list/:u_id', (req, res, next) => {
   // validate params
   const u_id = parseInt(req.params.u_id);
   if (isNaN(u_id)) {
@@ -17,7 +17,7 @@ router.get('/chat/:u_id', (req, res, next) => {
   }
 
   // 1. Get r_id and u_id of other party from mysql 
-  Chat_Mysql.getRoomOtherUidByMyUid(u_id, (err, relations) => {
+  Relation.getRoomOtherUidByMyUid(u_id, (err, relations) => {
     if (err) {
       return next(err);
     }
@@ -36,7 +36,7 @@ router.get('/chat/:u_id', (req, res, next) => {
     }
 
     // 2. Get alias, thumbnail with other u_id
-    User.getProfilesByUid(u_ids, (err, profiles) => {
+    User.getAliasAndThumbnailByUid(u_ids, (err, profiles) => {
       if (err) {
         return next(err);
       }
@@ -56,6 +56,10 @@ router.get('/chat/:u_id', (req, res, next) => {
       Chat.getLatestMessagesByRid(r_ids, (err, lastMessages) => {
         if (err) {
           return next(err);
+        }
+
+        if(lastMessages.msg !== 'Success') {
+          return res.send(lastMessages);
         }
 
         // 4. Get the number of unread messages
@@ -89,16 +93,23 @@ router.get('/chat/:u_id', (req, res, next) => {
               return relation.r_id == item.r_id;
             })[0];
 
-            relation.data = {
-              message: find.message,
-              date: find.date,
-              count: find.count
-            };
+            if(find) {
+              relation.data = {
+                message: find.message,
+                date: find.date,
+                count: find.count
+              };
+            }
           }
+
+          // If relation has not data property, there is no chat room.
+          const list = relations.filter((relation) => {
+            return relation.data !== undefined; 
+          }); 
 
           let result = {
             msg: 'Success',
-            list: relations
+            list
           };
 
           res.send(result);
@@ -109,11 +120,33 @@ router.get('/chat/:u_id', (req, res, next) => {
 });
 
 /**
+ * 대화 내용
+ * GET /chat/:r_id
+ */
+router.get('/chat/:r_id', (req, res, next) => {
+  // validate params
+  const r_id = parseInt(req.params.r_id);
+  if (isNaN(r_id)) {
+    return next(new Error('Not correct request'));
+  }
+
+  Chat.getMessagesByRid(r_id, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(result);
+  });
+});
+
+/**
  * 대화하기
  * POST /chat/:r_id
  * Body sample: { from: '조니뎁', to: '안졸리나졸리', message: '좋은 하루 보내세요' }
  */
 router.post('/chat/:r_id', (req, res, next) => {
+  // TODO: 대화하기: 어차피 socket.io 통신하면 post는 필요 없을듯??
+  
   // // validate params
   // const r_id = parseInt(req.params.r_id);
   // if (isNaN(r_id)) {

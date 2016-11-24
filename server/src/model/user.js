@@ -1,5 +1,7 @@
 var pool = require('./dbConnection');
 
+const Quiz_Limit_Count = 7;
+
 class User {
 }
 
@@ -29,7 +31,7 @@ User.isExistedUser = (u_id, callback) => {
  * Return:
  *  - [{u_id: 3, alias: 'KK', thumbnail: 'url'}, ...]
  */
-User.getProfilesByUid = (u_ids, callback) => {
+User.getAliasAndThumbnailByUid = (u_ids, callback) => {
   pool.getConnection((err, conn) => {
     if (err) {
       return callback(err);
@@ -45,6 +47,63 @@ User.getProfilesByUid = (u_ids, callback) => {
       conn.release();
       return callback(null, profiles);
     });
+  });
+};
+
+/**
+ * Get user profile
+ * Params:
+ *  - u_id: user id
+ */
+User.getProfileByUid = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    // 1. select user profile
+    const sql_profile = 'SELECT name, alias, age, area, thumbnail, profile, job, height, fit, faith, hobby, status, type, description from User as U, Characters as C WHERE U.c_id = C.c_id and U.u_id = ?';
+    conn.query(sql_profile, [u_id], (err, profiles) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      if (profiles.length === 0) {
+        conn.release();
+        return callback(new Error('Not found user'));
+      }
+
+      // 2. select quiz answer as limit count
+      const sql_quiz = `SELECT question1, question2, answer1, answer2, answer FROM Quiz, Answer WHERE Answer.q_id = Quiz.q_id and Answer.u_id = ? order by Answer.date desc limit ${Quiz_Limit_Count}`;
+      conn.query(sql_quiz, [u_id], (err, rows) => {
+        if (err) {
+          conn.release();
+          return callback(err);
+        }
+
+        // Combine profile and quiz
+        const profile = profiles[0];
+        profile.msg = 'Success';
+        profile.quiz = rows;
+
+        conn.release();
+        return callback(null, profile);
+      });
+    });
+  });
+};
+
+/**
+ * Update user profile 
+ */
+User.editProfileByUid = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = '';
   });
 };
 

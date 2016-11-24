@@ -83,7 +83,7 @@ Chat.statics.getLatestMessagesByRid = function getLatestMessageByRid(r_ids, call
           } else {
             result.data.push({
               r_id: lastMessage['r_id'],
-              message: []
+              message: ''
             });
           }
         }
@@ -146,6 +146,37 @@ Chat.statics.getUnreadMessageCount = function getUnreadMessageCount(r_ids, alias
     result.msg = 'Success';
     return callback(null, result);
   });
+};
+
+/**
+ * Get the all messages of room
+ * Params:
+ *  - r_id: room id
+ * Return:
+ *  - { msg: 'Success', data: [{from: 'Me', to: 'You', message: 'Hello', date: '2016-11-23T01:34:46.636Z', check: false}, ...] }
+ */
+Chat.statics.getMessagesByRid = function getMessagesByRid(r_id, callback) {
+  const projection = {
+    _id: false,
+    r_id: false,
+    sender: false,
+    receiver: false,
+    __v: false,
+    'messages._id': false,
+  };
+
+  this.find({ r_id: r_id }, projection)
+    .exec((err, rows) => {
+      if (err) {
+        return callback(err);
+      }
+
+      let result = {};
+      result.msg = 'Success';
+      result.data = (rows[0] === undefined) ? [] : rows[0].messages;
+
+      return callback(null, result);
+    });
 };
 
 module.exports = mongoose.model('Chat', Chat);
