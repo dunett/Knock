@@ -52,7 +52,7 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
 
   // make a thumbnail
   let thumbnailName = profile.filename.split('.')[0] + '-thumbnail' + '.' + profile.filename.split('.')[1];
-  easyimg.resize({
+  easyimg.thumbnail({
     src: path.join(profile.destination, profile.filename),
     dst: path.join(profile.destination, thumbnailName),
     width: 200
