@@ -24,6 +24,9 @@ class History{
 //서로에게 노크한 사람
 History.eachHistory = function(id, cb){
     pool.getConnection(function(err, conn){
+        if(err){
+            console.log(err);
+        }
         const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1 union SELECT sender FROM Relation WHERE receiver = ? AND relation = 1)';
         conn.query(sql, [id, id], (err, results) =>{
             const cnt = results.length;
