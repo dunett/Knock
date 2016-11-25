@@ -66,7 +66,7 @@ History.youHistory = function(id, cb){
 //지나간 사람
 History.pastHistory = function(id, cb){
     pool.getConnection(function(err, conn){
-        const sql = 'SELECT receiver FROM (SELECT receiver FROM Destiny WHERE sender = ? AND DATEDIFF(now(),date) < 7) A LEFT JOIN (SELECT receiver as sender FROM Relation WHERE sender = ? union SELECT sender FROM Relation WHERE receiver = ?) B ON A.receiver = B.sender';
+        const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM (SELECT receiver FROM Destiny WHERE sender = ? AND DATEDIFF(now(),date) < 7) A LEFT JOIN (SELECT receiver as sender FROM Relation WHERE sender = ? union SELECT sender FROM Relation WHERE receiver = ?) B ON A.receiver = B.sender)';
         conn.query(sql, [id, id, id], (err, results) =>{
             const cnt = results.length;
             if(cnt == 0){
