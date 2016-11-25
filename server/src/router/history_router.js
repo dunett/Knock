@@ -17,6 +17,9 @@ router.route('/history/:u_id/me')
 router.route('/history/:u_id/you')
     .get(youHistory);
 
+router.route('/history/:u_id/past')
+    .get(pastHistory);
+
 module.exports = router;
 
 // function totalHistory(req, res, next){
