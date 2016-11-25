@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const Knock = require('../model/knock.js');
 
 // 라우터 얻기

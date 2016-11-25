@@ -57,5 +57,10 @@ function youHistory(req, res, next){
 
 function pastHistory(req, res, next){
     const id = req.params.u_id;
-    History.pastHistory(id,)
+    History.pastHistory(id, (err, result) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(result);
+    })
 }

@@ -35,6 +35,7 @@ Quiz.addQuiz = function(info, cb){
         }
         const sql = "INSERT INTO Quiz SET ?";
         conn.query(sql, info, (err, result) =>{
+            conn.commit();
             conn.release();
             return cb(null, {msg : "Success"});
         });
@@ -50,6 +51,7 @@ Quiz.addAnswer = function(info, cb){
         }
         const sql = "INSERT INTO Answer SET ?";
         conn.query(sql, info, (err, result) =>{
+            conn.commit();
             conn.release();
             return cb(null, {msg : "Success"});
         });

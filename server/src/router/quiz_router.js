@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const Quiz = require('../model/quiz.js');
 
 // 라우터 얻기

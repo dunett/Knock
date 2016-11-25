@@ -4,7 +4,8 @@ var dbConfig = {
 	user : 'admin',
 	password : 'tjsdydwns',
 	port : 3306,
-	database : 'Knock'	
+	database : 'Knock',
+	timezone : 'KST'	
 };
 var dbPool = mysql.createPool(dbConfig);
 
