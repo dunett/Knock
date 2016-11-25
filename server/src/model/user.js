@@ -96,14 +96,36 @@ User.getProfileByUid = (u_id, callback) => {
 
 /**
  * Update user profile 
+ * Params:
+ *  - args:
+ *     - u_id, job, height, fit, faith, hobby, profile, thumbnail
  */
-User.editProfileByUid = (u_id, callback) => {
+User.editProfileByUid = (args, callback) => {
   pool.getConnection((err, conn) => {
     if (err) {
       return callback(err);
     }
 
-    const sql = '';
+    let sql = 'UPDATE User SET ? WHERE u_id = ?';
+
+    let param = {};
+    if (args.job) param.job = args.job;
+    if (args.height) param.height = args.height;
+    if (args.fit) param.fit = args.fit;
+    if (args.faith) param.faith = args.faith;
+    if (args.hobby) param.hobby = args.hobby;
+    if (args.profile) param.profile = args.profile;
+    if (args.thumbnail) param.thumbnail = args.thumbnail;
+
+    conn.query(sql, [param, args.u_id], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null, result);
+    });
   });
 };
 

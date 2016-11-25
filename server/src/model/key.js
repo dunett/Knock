@@ -14,22 +14,17 @@ Key.chgKey = function(info, cb){
                     conn.release();
                     return cb(err, {msg: 'Failure'});
                 }
-
                 if (results.length == 0) {
                     conn.release();
                     return cb(err, {msg: 'No result'});
                 }
-
                 const key = results[0].money;
-
                 if(key+info.cost>=0){
                     key = key + info.cost;
                 }else{
                     return cb(err, {msg: 'No money'});
                 }
-
                 info.rest = key;
-
                 const sql2 = 'UPDATE User SET money = ? where u_id = ?';
                 conn.query(sql2, [info.rest , info.u_id], function (err, results){
                     console.log("test")
@@ -39,7 +34,6 @@ Key.chgKey = function(info, cb){
                         conn.release();
                         return cb(err, {msg: 'Failure'});
                     }
-                    
                     const sql3 = "INSERT INTO History SET ?"
                     conn.query(sql3, info, function(err, results){
                         if (err) {
@@ -57,5 +51,4 @@ Key.chgKey = function(info, cb){
         });
    });
 }
-
 module.exports = Key;

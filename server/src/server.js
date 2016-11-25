@@ -1,5 +1,5 @@
 var express = require('express');
-//var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 
@@ -8,6 +8,9 @@ var dotenv = require('dotenv').config();
 var quizRouter = require('./router/quiz_router');
 var keyRouter = require('./router/key_router');
 var knockRouter = require('./router/knock_router');
+var menuRouter = require('./router/menu_router');
+var historyRouter = require('./router/history_router');
+
 var mbti = require('./router/mbti');
 var chat = require('./router/chat');
 var report = require('./router/report');
@@ -32,12 +35,14 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 
 app.use(morgan('dev'));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(quizRouter);
 app.use(keyRouter);
 app.use(knockRouter);
+app.use(menuRouter);
+app.use(historyRouter);
 app.use(mbti);
 app.use(chat);
 app.use(report);

@@ -51,6 +51,15 @@ const uploadProfile = (args) => {
   });
 };
 
+const deleteProfiel = (args) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: bucketName,
+      //Key: ~~ 
+    };        
+  });
+};
+
 module.exports = {
   uploadProfile
 };

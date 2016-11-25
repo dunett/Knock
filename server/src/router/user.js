@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const async = require('async');
 
 const User = require('../model/user');
 const upload = require('../utils/multerWrapper');
@@ -37,6 +39,10 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
   }
 
   // validate body message
+  if (!req.file && !req.body) {
+    return next(new Error('Not correct body message'));
+  }
+
   const profile = req.file;
   const job = req.body.job;
   const height = req.body.height;
@@ -44,48 +50,134 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
   const faith = req.body.faith;
   const hobby = req.body.hobby;
 
-  if (!profile || !job || !height || !fit || !faith || !hobby) {
+  if (!profile && !job && !height && !fit && !faith && !hobby) {
     return next(new Error('Not correct body message'));
   }
 
-  //profile.filename = 'profile.jpg';
+  const changes = {
+    u_id: u_id,
+    job: job || undefined,
+    height: height || undefined,
+    fit: fit || undefined,
+    faith: faith || undefined,
+    hobby: hobby || undefined,
+  };
 
+  async.waterfall([
+    async.apply(makeThumbnail, profile),
+    uploadProfileToS3,
+    async.apply(editProfile, changes),
+  ], (err, images) => {
+    removeFiles(images);
+
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+
+    res.send({ msg: 'Success' });
+  });
+});
+
+const makeThumbnail = (profile, callback) => {
   // make a thumbnail
+  if (!profile) {
+    return callback(null, null, null);
+  }
+
   let thumbnailName = profile.filename.split('.')[0] + '-thumbnail' + '.' + profile.filename.split('.')[1];
-  easyimg.thumbnail({
+  easyimg.resize({
     src: path.join(profile.destination, profile.filename),
     dst: path.join(profile.destination, thumbnailName),
     width: 200
   })
-    .then(image => {
-      console.log(image);
+    .then(thumbnail => {
+      // TODO: Change then and catch method because window dont work exactly
+      callback(null, thumbnail);
     })
     .catch(err => {
-      console.log(err);
-    });
+      const thumbnailForTest = {
+        type: 'jpeg',
+        name: thumbnailName,
+        path: path.join(profile.destination, thumbnailName)
+      };
 
-  // TODO: 프로필 수정 
-  // If user upload new profile image, first remove previous profile image and thumbnail in s3 
+      callback(null, profile, thumbnailForTest);   // for test in window
+      //callback(err);
+    });
+};
+
+const uploadProfileToS3 = (profile, thumbnail, callback) => {
+  if (!profile) {
+    return callback(null, null);
+  }
 
   // upload profile and thumbnail to s3
-  // aws.uploadProfile({
-  //   path: profile.path,
-  //   name: profile.filename,
-  //   contentType: profile.mimetype,
-  // })
-  //   .then(imageUrl => {
-  //     console.log(imageUrl);
-  //   })
-  //   .catch(err => {
-  //     console.log('errskfjskl: ', err);
-  //   });
+  const images = [profile, thumbnail];
+  let imagesUrl = [];
 
+  async.eachSeries(images, (image, next) => {
+    aws.uploadProfile({
+      path: image.path,
+      name: image.filename || image.name,
+      contentType: image.mimetype || image.type,
+    })
+      .then(imageUrl => {
+        imagesUrl.push({
+          path: image.path,
+          url: imageUrl
+        });
 
-  // delete profile and thumbnail in node server
+        next();
+      })
+      .catch(err => {
+        next(err);
+      });
+  }, err => {
+    if (err) {
+      // 프로필 이미지만 업로드 되고 썸네일은 실패했다면 프로필 이미지 삭제
+      // 처음부터 프로필 이미지가 실패했다면 삭제 ㄴㄴ
+      // TODO: When fail upload, delete image in s3??????
+      console.error('Fail upload the profile to S3: ', err);
+      return callback(err, images);
+    }
 
-  // update user profile
+    callback(null, imagesUrl);
+  });
+};
 
-  //res.send('ok');
-});
+const editProfile = (changes, imagesUrl, callback) => {
+  if (imagesUrl) {
+    changes.profile = imagesUrl[0].url;
+    changes.thumbnail = imagesUrl[1].url;
+  }
+
+  User.editProfileByUid(changes, (err, result) => {
+    if (err) {
+      return callback(err, imagesUrl);
+    }
+
+    callback(null, imagesUrl);
+  });
+};
+
+/**
+ * Params:
+ *  - files: object array
+ *     - path: file full path
+ */
+const removeFiles = (files) => {
+  if (!files) return;
+
+  async.each(files, (file, next) => {
+    fs.unlink(file.path, err => {
+      next();
+    });
+  }, err => {
+    if (err) {
+      console.error(err);
+    }
+  });
+};
 
 module.exports = router;
