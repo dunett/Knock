@@ -13,28 +13,40 @@ const s3 = new AWS.S3();
 /**
  * Params:
  *  - args:
- *     - key
- *     - contentType
+ *     - path: file full path
+ *     - name: file name
+ *     - contentType: extension
  */
-const uploadProfile = (args, callback) => {
-  const readStream = fs.createReadStream(args.path);
-
-  const params = {
-    Bucket: bucketName,
-    Key: 'profile/' + args.name,
-    Body: readStream,
-    ACL: 'public-read',
-    ContentType: args.contentType,
-  };
-
+const uploadProfile = (args) => {
   return new Promise((resolve, reject) => {
-    s3.putObject(params, (err, data) => {
-      if (err) {
-        reject(err);
-      }
-      // http, https
-      const imageUrl = s3.endpoint.href + bucketName + '/' + params.Key;
-      resolve(imageUrl);
+    if (!args.path || !args.name || !args.contentType) {
+      return reject(new Error('Some arguments is undefined'));
+    }
+
+    const fileStream = fs.createReadStream(args.path);
+
+    fileStream.on('error', err => {
+      return reject(err);
+    });
+
+    fileStream.on('open', () => {
+      const params = {
+        Bucket: bucketName,
+        Key: 'profile/' + args.name,
+        Body: fileStream,
+        ACL: 'public-read',
+        ContentType: args.contentType,
+      };
+
+      s3.putObject(params, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+
+        // http, https
+        const imageUrl = s3.endpoint.href + bucketName + '/' + params.Key;
+        resolve(imageUrl);
+      });
     });
   });
 };
