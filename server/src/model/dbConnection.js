@@ -5,7 +5,11 @@ var dbConfig = {
 	password : 'tjsdydwns',
 	port : 3306,
 	database : 'Knock',
-	timezone : 'KST'	
+	timezone : 'KST',
+	connectionLimit : 1000,
+    connectTimeout  : 60 * 60 * 1000,
+    aquireTimeout   : 60 * 60 * 1000,
+    timeout         : 60 * 60 * 1000
 };
 var dbPool = mysql.createPool(dbConfig);
 
