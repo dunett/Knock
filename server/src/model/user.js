@@ -129,4 +129,22 @@ User.editProfileByUid = (args, callback) => {
   });
 };
 
+User.getProfileAndThumbnailByUid = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = 'SELECT profile, thumbnail FROM User WHERE u_id = ?';
+    conn.query(sql, [u_id], (err, images) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      return callback(null, images[0]);
+    });
+  });
+};
+
 module.exports = User;

@@ -63,19 +63,58 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
     hobby: hobby || undefined,
   };
 
-  async.waterfall([
-    async.apply(makeThumbnail, profile),
-    uploadProfileToS3,
-    async.apply(editProfile, changes),
-  ], (err, images) => {
-    removeFiles(images);
-
+  // Get old profile and thumbnail to remove after upload
+  User.getProfileAndThumbnailByUid(u_id, (err, oldImage) => {
     if (err) {
-      console.log(err);
       return next(err);
     }
 
-    res.send({ msg: 'Success' });
+    async.waterfall([
+      async.apply(makeThumbnail, profile),
+      uploadProfileToS3,
+      async.apply(editProfile, changes),
+    ], (err, images) => {
+      removeFiles(images);
+
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+
+      // If profile is changed, remove old profile and thumbnail in S3
+      let profileName = path.basename(oldImage.profile);
+      let thumbnailName = path.basename(oldImage.thumbnail);
+
+      // 이전 이미지가 없을 경우 그냥 리턴
+      if (!profileName && !thumbnailName) {
+        return res.send({ msg: 'Success' });
+      }
+
+      // 이전 이미지는 있지만 새로운 이미지를 업로드 한게 아니라면 그냥 리턴
+      if (!images) {
+        return res.send({ msg: 'Success' });
+      }
+
+      const oldImages = [{ name: profileName }, { name: thumbnailName }];
+
+      // 이전 S3 이미지 삭제
+      async.eachSeries(oldImages, (oldImage, next) => {
+        aws.deleteProfile(oldImage)
+          .then(result => {
+            next();
+          })
+          .catch(err => {
+            next(err);
+          });
+      }, err => {
+        if (err) {
+          console.error(err);
+          return res.send({ msg: 'Success' });
+        }
+
+        return res.send({ msg: 'Success' });
+      });
+    });
   });
 });
 
