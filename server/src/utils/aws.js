@@ -18,7 +18,7 @@ const s3 = new AWS.S3();
  *     - name: file name
  *     - contentType: extension
  */
-const uploadProfile = (args) => {
+const uploadFile = (args) => {
   return new Promise((resolve, reject) => {
     if (!args.path || !args.name || !args.contentType) {
       return reject(new Error('Some arguments is undefined'));
@@ -57,7 +57,7 @@ const uploadProfile = (args) => {
  *  - args:
  *     - name: file name
  */
-const deleteProfile = (args) => {
+const deleteFile = (args) => {
   return new Promise((resolve, reject) => {
     if (!args.name) {
       return reject(new Error('Some arguments is undefined'));
@@ -79,6 +79,6 @@ const deleteProfile = (args) => {
 };
 
 module.exports = {
-  uploadProfile,
-  deleteProfile
+  uploadFile,
+  deleteFile
 };

@@ -6,7 +6,7 @@ const async = require('async');
 const User = require('../model/user');
 const upload = require('../utils/multerWrapper');
 
-const easyimg = require('easyimage');
+const gm = require('gm').subClass({ imageMagick: true });
 const path = require('path');
 
 const aws = require('../utils/aws');
@@ -85,21 +85,21 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
       let profileName = path.basename(oldImage.profile);
       let thumbnailName = path.basename(oldImage.thumbnail);
 
-      // 이전 이미지가 없을 경우 그냥 리턴
+      // Return if there is no previous image 
       if (!profileName && !thumbnailName) {
         return res.send({ msg: 'Success' });
       }
 
-      // 이전 이미지는 있지만 새로운 이미지를 업로드 한게 아니라면 그냥 리턴
+      // If user have an old image but have not uploaded a new one, just return
       if (!images) {
         return res.send({ msg: 'Success' });
       }
 
       const oldImages = [{ name: profileName }, { name: thumbnailName }];
 
-      // 이전 S3 이미지 삭제
+      // If you uploaded a new image, delete the old image
       async.eachSeries(oldImages, (oldImage, next) => {
-        aws.deleteProfile(oldImage)
+        aws.deleteFile(oldImage)
           .then(result => {
             next();
           })
@@ -125,24 +125,24 @@ const makeThumbnail = (profile, callback) => {
   }
 
   let thumbnailName = profile.filename.split('.')[0] + '-thumbnail' + '.' + profile.filename.split('.')[1];
-  easyimg.resize({
-    src: path.join(profile.destination, profile.filename),
-    dst: path.join(profile.destination, thumbnailName),
-    width: 200
-  })
-    .then(thumbnail => {
-      // TODO: Change then and catch method because window dont work exactly
-      callback(null, thumbnail);
-    })
-    .catch(err => {
-      const thumbnailForTest = {
-        type: 'jpeg',
+  const src = path.join(profile.destination, profile.filename);
+  const dst = path.join(profile.destination, thumbnailName);
+
+  gm(src)
+    .resize(200, 200)       // keep the ratio 
+    //.resizeExact(200, 200)
+    .write(dst, err => {
+      if (err) {
+        return callback(err, [profile]);
+      }
+
+      const thumbnail = {
+        type: profile.mimetype,
         name: thumbnailName,
-        path: path.join(profile.destination, thumbnailName)
+        path: dst
       };
 
-      callback(null, profile, thumbnailForTest);   // for test in window
-      //callback(err);
+      callback(null, profile, thumbnail);
     });
 };
 
@@ -156,7 +156,7 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
   let imagesUrl = [];
 
   async.eachSeries(images, (image, next) => {
-    aws.uploadProfile({
+    aws.uploadFile({
       path: image.path,
       name: image.filename || image.name,
       contentType: image.mimetype || image.type,
@@ -174,9 +174,6 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
       });
   }, err => {
     if (err) {
-      // 프로필 이미지만 업로드 되고 썸네일은 실패했다면 프로필 이미지 삭제
-      // 처음부터 프로필 이미지가 실패했다면 삭제 ㄴㄴ
-      // TODO: When fail upload, delete image in s3??????
       console.error('Fail upload the profile to S3: ', err);
       return callback(err, images);
     }
@@ -186,7 +183,7 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
 };
 
 const editProfile = (changes, imagesUrl, callback) => {
-  if (imagesUrl) {
+  if (imagesUrl && imagesUrl.length >= 1) {
     changes.profile = imagesUrl[0].url;
     changes.thumbnail = imagesUrl[1].url;
   }
