@@ -11,6 +11,9 @@ const path = require('path');
 
 const aws = require('../utils/aws');
 
+const Thumbnail_Width = 200;
+const Thumbnail_Height = 200;
+
 /**
  * 프로필 보기
  * GET /user/:u_id
@@ -31,6 +34,10 @@ router.get('/user/:u_id', (req, res, next) => {
   });
 });
 
+/**
+ * 프로필 수정
+ * PUT /user/:u_id
+ */
 router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
   // validate params
   const u_id = parseInt(req.params.u_id);
@@ -118,6 +125,27 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
   });
 });
 
+/**
+ * 계정 휴면
+ * Toggle the status to Normal or Sleep
+ * PUT /user/:u_id/sleep
+ */
+router.put('/user/:u_id/sleep', (req, res, next) => {
+  // validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }  
+
+  User.toggleStatusByUid(u_id, (err, result) => {
+    if(err) {
+      return next(err);
+    }
+    
+    res.send(result);
+  });
+});
+
 const makeThumbnail = (profile, callback) => {
   // make a thumbnail
   if (!profile) {
@@ -129,7 +157,7 @@ const makeThumbnail = (profile, callback) => {
   const dst = path.join(profile.destination, thumbnailName);
 
   gm(src)
-    .resize(200, 200)       // keep the ratio 
+    .resize(Thumbnail_Width, Thumbnail_Height)       // keep the ratio 
     //.resizeExact(200, 200)
     .write(dst, err => {
       if (err) {

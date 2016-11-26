@@ -1,4 +1,5 @@
 const pool = require('./dbConnection');
+const async = require('async');
 
 class Mbti {
 }
@@ -145,42 +146,115 @@ Mbti.getOtherMbtiType = (u_id, callback) => {
       return callback(err);
     }
 
-    const sql_characters = 'SELECT * FROM Characters';
-    conn.query(sql_characters, (err, characters) => {
+    async.waterfall([
+      function getCharacters(cb) {
+        const sql_characters = 'SELECT * FROM Characters';
+        conn.query(sql_characters, (err, characters) => {
+          if (err) {
+            return cb(err);
+          }
+
+          cb(null, characters);
+        });
+      },
+      function getFeature(characters, cb) {
+        const sql_feature = 'SELECT * FROM Feature';
+        conn.query(sql_feature, (err, features) => {
+          if (err) {
+            return cb(err);
+          }
+
+          cb(null, characters, features);
+        });
+      },
+      function getOtherForOrder(characters, features, cb) {
+        // 같은 타입, 비슷한 타입, 다른 타입 순서로 c_id를 구한다
+        const sql_other = 'SELECT c_id AS id from User WHERE u_id = ? UNION SELECT id from Other WHERE c_id = (SELECT c_id from User WHERE u_id = ?)';
+        conn.query(sql_other, [u_id, u_id], (err, others) => {
+          if (err) {
+            return cb(err);
+          }
+
+          let result = {};
+          result['msg'] = 'Success';
+          result['data'] = [];
+
+          // make a result data
+          for (let other of others) {
+            let findedType = characters.filter(char => {
+              return char.c_id === other.id;
+            })[0];
+
+            // join features like 상상력/이상
+            let findedFeatures = features.filter(feature => {
+              return feature.c_id === other.id;
+            });
+
+            const featuresStr = findedFeatures.map(feature => {
+              return feature.f_type;
+            }).join('/');
+
+            result['data'].push({
+              type: findedType.type,
+              image: findedType.image,
+              description: findedType.description,
+              explain: findedType.explain,
+              feature: featuresStr,
+            });
+          }
+
+          cb(null, result);
+        });
+      }
+    ], (err, result) => {
       if (err) {
         conn.release();
         return callback(err);
       }
 
-      // Select simliar and other c_id from Other table
-      const sql_other = 'SELECT id from Other WHERE c_id = (SELECT c_id from User WHERE u_id = ?)';
-      conn.query(sql_other, [u_id], (err, others) => {
-        if (err) {
-          conn.release();
-          return callback(err);
-        }
-
-        let result = {};
-        result['msg'] = 'Success';
-        result['data'] = [];
-
-        // make a result data
-        for (let other of others) {
-          let findedType = characters.filter(char => {
-            return char.c_id === other.id;
-          })[0];
-
-          result['data'].push({
-            type: findedType.type,
-            image: findedType.image,
-            description: findedType.description
-          });
-        }
-
-        conn.release();
-        return callback(null, result);
-      });
+      conn.release();
+      return callback(null, result);
     });
+
+    // const sql_characters = 'SELECT * FROM Characters';
+    // conn.query(sql_characters, (err, characters) => {
+    //   if (err) {
+    //     conn.release();
+    //     return callback(err);
+    //   }
+
+    //   // Select simliar and other c_id from Other table
+    //   const sql_other = 'SELECT c_id AS id from User WHERE u_id = ? UNION SELECT id from Other WHERE c_id = (SELECT c_id from User WHERE u_id = ?)';
+    //   conn.query(sql_other, [u_id, u_id], (err, others) => {
+    //     if (err) {
+    //       conn.release();
+    //       return callback(err);
+    //     }
+
+    //     let result = {};
+    //     result['msg'] = 'Success';
+    //     result['data'] = [];
+
+    //     // make a result data
+    //     for (let other of others) {
+    //       let findedType = characters.filter(char => {
+    //         return char.c_id === other.id;
+    //       })[0];
+
+    //       result['data'].push({
+    //         type: findedType.type,
+    //         image: findedType.image,
+    //         description: findedType.description,
+    //         explain: findedType.explain,
+    //       });
+    //     }
+
+    //     conn.release();
+    //     return callback(null, result);
+    //   });
+    // });
+
+
   });
 };
 

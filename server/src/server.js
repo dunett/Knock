@@ -1,5 +1,5 @@
 var express = require('express');
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 
@@ -16,6 +16,7 @@ var chat = require('./router/chat');
 var report = require('./router/report');
 var relation = require('./router/relation');
 var user = require('./router/user');
+var auth = require('./router/auth');
 
 var chatService = require('./services/chatService');
 
@@ -35,8 +36,8 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(quizRouter);
 app.use(keyRouter);
@@ -48,6 +49,7 @@ app.use(chat);
 app.use(report);
 app.use(relation);
 app.use(user);
+app.use(auth);
 
 // 여기까지 오면 - 에러
 app.use(function (req, res, next) {

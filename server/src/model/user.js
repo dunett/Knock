@@ -1,9 +1,33 @@
 var pool = require('./dbConnection');
 
 const Quiz_Limit_Count = 7;
+const Status_Normal = 1;
+const Status_Sleep = 3;
 
 class User {
 }
+
+/**
+ * Check if the alias exists 
+ */
+User.isExistedAlias = (alias, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = 'SELECT COUNT(*) as count from User where alias = ?';
+    conn.query(sql, [alias], (err, count) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null, count[0]);
+    });
+  });
+};
 
 User.isExistedUser = (u_id, callback) => {
   pool.getConnection((err, conn) => {
@@ -21,6 +45,22 @@ User.isExistedUser = (u_id, callback) => {
       conn.release();
       return callback(null, rows[0]);
     });
+  });
+};
+
+/**
+ * Add new user to database
+ * Params:
+ *  - user: email, alias, gender, area, age, job, faith, hobby
+ */
+User.addUser = (user, callback) => {
+  pool.getConnection((err, conn) => {
+    if(err) {
+      return callback(err);
+    }
+
+    // TODO: Not finish
+    const sql = 'INSERT INTO User SET ?';
   });
 };
 
@@ -129,6 +169,11 @@ User.editProfileByUid = (args, callback) => {
   });
 };
 
+/**
+ * Get Profile and thumbnail
+ * Return: 
+ *  - {profile: '', thumbnail: ''}
+ */
 User.getProfileAndThumbnailByUid = (u_id, callback) => {
   pool.getConnection((err, conn) => {
     if (err) {
@@ -142,7 +187,34 @@ User.getProfileAndThumbnailByUid = (u_id, callback) => {
         return callback(err);
       }
 
+      conn.release();
       return callback(null, images[0]);
+    });
+  });
+};
+
+/**
+ * Toggle status of user to Normal or Sleep
+ * Status:
+ *  - 1: Normal
+ *  - 3: Sleep 
+ */
+User.toggleStatusByUid = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    //const sql = 'UPDATE User SET status = IF(status = 1, 3, 1) where u_id = ?';
+    const sql = `UPDATE User SET status = IF(status = ${Status_Normal}, ${Status_Sleep}, ${Status_Normal}) where u_id = ?`;
+    conn.query(sql, [u_id], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null, { msg: 'Success' });
     });
   });
 };
