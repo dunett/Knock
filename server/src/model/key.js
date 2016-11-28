@@ -24,10 +24,10 @@ Key.chgKey = function(info, cb){
                 }else{
                     return cb(err, {msg: 'No money'});
                 }
-                info.rest = key;
+                //info.rest = key;
                 const sql2 = 'UPDATE User SET money = ? where u_id = ?';
-                conn.query(sql2, [info.rest , info.u_id], function (err, results){
-                    console.log("test")
+                conn.query(sql2, [key, info.u_id], function (err, results){
+                    //console.log("test")
                     if (err) {
                         err.code = 500;
                         conn.rollback();
