@@ -23,8 +23,21 @@ function showKey(req, res, next) {
 function chgKey(req, res, next) {
     const id = req.params.u_id;
     const key = req.body.key;
-    const des = req.body.description;
+    const nick = req.body.nick
+    const type = req.body.type;
 
+    if(type == 1){
+        const des = "오늘의 열쇠가 적립되었습니다.";
+    }
+    if(type == 2){
+        const des = "상대방 새로받기를 신청했습니다.";
+    }
+    if(type == 3){
+        const des = nick + "님에게 수락하기를 했습니다.";
+    }
+    if(type == 4){
+        const des = nick + "님에게 노크하기를 했습니다.";
+    }
     const info = {
         u_id : id,
         cost : key,
