@@ -97,6 +97,32 @@ router.get('/mbti/:u_id', (req, res, next) => {
   });
 });
 
+router.get('/mbti/:u_id/detail', (req, res, next) => {
+  // Validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }
+
+  User.isExistedUser(u_id, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (result.count < 1) {
+      return next(new Error('Cannot find user'));
+    }
+
+    Mbti.getDetailMbti(u_id, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.send(result);
+    });
+  });
+});
+
 /**
  * 10가지 유형보기/상세보기
  * GET /mbti/:u_id/other

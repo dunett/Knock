@@ -6,10 +6,13 @@ const async = require('async');
 const User = require('../model/user');
 const upload = require('../utils/multerWrapper');
 
-const easyimg = require('easyimage');
+const gm = require('gm').subClass({ imageMagick: true });
 const path = require('path');
 
 const aws = require('../utils/aws');
+
+const Thumbnail_Width = 200;
+const Thumbnail_Height = 200;
 
 /**
  * 프로필 보기
@@ -31,6 +34,10 @@ router.get('/user/:u_id', (req, res, next) => {
   });
 });
 
+/**
+ * 프로필 수정
+ * PUT /user/:u_id
+ */
 router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
   // validate params
   const u_id = parseInt(req.params.u_id);
@@ -63,19 +70,79 @@ router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
     hobby: hobby || undefined,
   };
 
-  async.waterfall([
-    async.apply(makeThumbnail, profile),
-    uploadProfileToS3,
-    async.apply(editProfile, changes),
-  ], (err, images) => {
-    removeFiles(images);
-
+  // Get old profile and thumbnail to remove after upload
+  User.getProfileAndThumbnailByUid(u_id, (err, oldImage) => {
     if (err) {
-      console.log(err);
       return next(err);
     }
 
-    res.send({ msg: 'Success' });
+    async.waterfall([
+      async.apply(makeThumbnail, profile),
+      uploadProfileToS3,
+      async.apply(editProfile, changes),
+    ], (err, images) => {
+      removeFiles(images);
+
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+
+      // If profile is changed, remove old profile and thumbnail in S3
+      let profileName = path.basename(oldImage.profile);
+      let thumbnailName = path.basename(oldImage.thumbnail);
+
+      // Return if there is no previous image 
+      if (!profileName && !thumbnailName) {
+        return res.send({ msg: 'Success' });
+      }
+
+      // If user have an old image but have not uploaded a new one, just return
+      if (!images) {
+        return res.send({ msg: 'Success' });
+      }
+
+      const oldImages = [{ name: profileName }, { name: thumbnailName }];
+
+      // If you uploaded a new image, delete the old image
+      async.eachSeries(oldImages, (oldImage, next) => {
+        aws.deleteFile(oldImage)
+          .then(result => {
+            next();
+          })
+          .catch(err => {
+            next(err);
+          });
+      }, err => {
+        if (err) {
+          console.error(err);
+          return res.send({ msg: 'Success' });
+        }
+
+        return res.send({ msg: 'Success' });
+      });
+    });
+  });
+});
+
+/**
+ * 계정 휴면
+ * Toggle the status to Normal or Sleep
+ * PUT /user/:u_id/sleep
+ */
+router.put('/user/:u_id/sleep', (req, res, next) => {
+  // validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }  
+
+  User.toggleStatusByUid(u_id, (err, result) => {
+    if(err) {
+      return next(err);
+    }
+    
+    res.send(result);
   });
 });
 
@@ -86,24 +153,24 @@ const makeThumbnail = (profile, callback) => {
   }
 
   let thumbnailName = profile.filename.split('.')[0] + '-thumbnail' + '.' + profile.filename.split('.')[1];
-  easyimg.resize({
-    src: path.join(profile.destination, profile.filename),
-    dst: path.join(profile.destination, thumbnailName),
-    width: 200
-  })
-    .then(thumbnail => {
-      // TODO: Change then and catch method because window dont work exactly
-      callback(null, thumbnail);
-    })
-    .catch(err => {
-      const thumbnailForTest = {
-        type: 'jpeg',
+  const src = path.join(profile.destination, profile.filename);
+  const dst = path.join(profile.destination, thumbnailName);
+
+  gm(src)
+    .resize(Thumbnail_Width, Thumbnail_Height)       // keep the ratio 
+    //.resizeExact(200, 200)
+    .write(dst, err => {
+      if (err) {
+        return callback(err, [profile]);
+      }
+
+      const thumbnail = {
+        type: profile.mimetype,
         name: thumbnailName,
-        path: path.join(profile.destination, thumbnailName)
+        path: dst
       };
 
-      callback(null, profile, thumbnailForTest);   // for test in window
-      //callback(err);
+      callback(null, profile, thumbnail);
     });
 };
 
@@ -117,7 +184,7 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
   let imagesUrl = [];
 
   async.eachSeries(images, (image, next) => {
-    aws.uploadProfile({
+    aws.uploadFile({
       path: image.path,
       name: image.filename || image.name,
       contentType: image.mimetype || image.type,
@@ -135,9 +202,6 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
       });
   }, err => {
     if (err) {
-      // 프로필 이미지만 업로드 되고 썸네일은 실패했다면 프로필 이미지 삭제
-      // 처음부터 프로필 이미지가 실패했다면 삭제 ㄴㄴ
-      // TODO: When fail upload, delete image in s3??????
       console.error('Fail upload the profile to S3: ', err);
       return callback(err, images);
     }
@@ -147,7 +211,7 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
 };
 
 const editProfile = (changes, imagesUrl, callback) => {
-  if (imagesUrl) {
+  if (imagesUrl && imagesUrl.length >= 1) {
     changes.profile = imagesUrl[0].url;
     changes.thumbnail = imagesUrl[1].url;
   }

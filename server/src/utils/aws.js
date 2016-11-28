@@ -7,6 +7,7 @@ AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
 
 // 버킷 이름
 const bucketName = 'tacademy-knock';
+const profileFolderName = 'profile/';
 
 const s3 = new AWS.S3();
 
@@ -17,7 +18,7 @@ const s3 = new AWS.S3();
  *     - name: file name
  *     - contentType: extension
  */
-const uploadProfile = (args) => {
+const uploadFile = (args) => {
   return new Promise((resolve, reject) => {
     if (!args.path || !args.name || !args.contentType) {
       return reject(new Error('Some arguments is undefined'));
@@ -32,7 +33,7 @@ const uploadProfile = (args) => {
     fileStream.on('open', () => {
       const params = {
         Bucket: bucketName,
-        Key: 'profile/' + args.name,
+        Key: profileFolderName + args.name,
         Body: fileStream,
         ACL: 'public-read',
         ContentType: args.contentType,
@@ -51,15 +52,33 @@ const uploadProfile = (args) => {
   });
 };
 
-const deleteProfiel = (args) => {
+/**
+ * Params:
+ *  - args:
+ *     - name: file name
+ */
+const deleteFile = (args) => {
   return new Promise((resolve, reject) => {
+    if (!args.name) {
+      return reject(new Error('Some arguments is undefined'));
+    }
+
     const params = {
       Bucket: bucketName,
-      //Key: ~~ 
-    };        
+      Key: profileFolderName + args.name,
+    };
+
+    s3.deleteObject(params, err => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve();
+    });
   });
 };
 
 module.exports = {
-  uploadProfile
+  uploadFile,
+  deleteFile
 };

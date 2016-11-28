@@ -1,7 +1,7 @@
 // multer.single('image name') => text and file in body
 // multer.single() => only text in body
 // req.body.name
-// req.file.name
+// req.file
 
 const path = require('path');
 const multer = require('multer');
