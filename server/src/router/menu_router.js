@@ -46,7 +46,7 @@ function addQuestion(req, res, next){
     const id = req.params.u_id;
     const question = req.body.question;
     const info = {
-        u_id : id,
+        writer : id,
         question : question
     }
     Menu.addQuestion(info, (err, result) =>{
