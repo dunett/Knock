@@ -24,7 +24,7 @@ Menu.addNotice = function(){
 
 Menu.showBoard = function(id, cb){
     pool.getConnection(function(err, conn){
-        const sql = 'SELECT u.name, b.question, b.answer, b.q_date, b.a_date FROM Board b, User u WHERE b.u_id = ? AND b.u_id = u.u_id order by b.q_date desc';
+        const sql = 'SELECT u.name, b.question, b.answer, b.q_date, b.a_date FROM Board b, User u WHERE b.writer = ? AND b.writer = u.u_id order by b.q_date desc';
         conn.query(sql, id, function(err, results){
             if(err){
                 err.code = 500;
