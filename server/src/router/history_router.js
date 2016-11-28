@@ -4,8 +4,8 @@ const History = require('../model/history.js');
 
 const router = express.Router();
 
-// router.route('/history/:u_id')
-//     .get(totalHistory);
+router.route('/history/:u_id')
+    .get(totalHistory);
 
 router.route('/history/:u_id/each')
     .get(eachHistory);
@@ -22,11 +22,15 @@ router.route('/history/:u_id/past')
 
 module.exports = router;
 
-// function totalHistory(req, res, next){
-//     const id = req.params.u_id;
-//     const num = req.query.count;
-//     H
-// }
+ function totalHistory(req, res, next){
+     const id = req.params.u_id;
+     History.totalHistory(id, (err, results) =>{
+         if(err){
+             return next(err);
+         }
+         res.send(results);
+     })
+ }
 
 function eachHistory(req, res, next){
     const id = req.params.u_id;

@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 
-var dotenv = require('dotenv').config();
+//var dotenv = require('dotenv').config();
 
 var quizRouter = require('./router/quiz_router');
 var keyRouter = require('./router/key_router');
@@ -15,7 +15,7 @@ var mbti = require('./router/mbti');
 var chat = require('./router/chat');
 var report = require('./router/report');
 var relation = require('./router/relation');
-var user = require('./router/user');
+//var user = require('./router/user');
 
 var chatService = require('./services/chatService');
 
@@ -25,7 +25,7 @@ db.on('error', console.error);
 db.once('open', () => {
   console.log('Connected to mongod server');
 });
-mongoose.connect(process.env.DB_MONGO);
+//mongoose.connect(process.env.DB_MONGO);
 
 var app = express();
 // var http = require('http').Server(app);
@@ -47,7 +47,7 @@ app.use(mbti);
 app.use(chat);
 app.use(report);
 app.use(relation);
-app.use(user);
+//app.use(user);
 
 // 여기까지 오면 - 에러
 app.use(function (req, res, next) {

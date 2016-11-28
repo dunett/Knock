@@ -47,19 +47,12 @@ function addQuiz(req, res, next) {
 function addAnswer(req, res) {
     const u_id = req.params.u_id;
     const q_id = req.body.q_id;
-    const quest1 = req.body.question1;
-    const quest2 = req.body.question2;
     const answer = req.body.answer;
-
-    console.log(q_id);
-    console.log(quest1);
-    console.log(quest2);
-    console.log(answer);
 
     const info = {
         u_id : u_id,
         q_id : q_id,
-        answer : quest1+ " " + answer + " " + quest2
+        answer : answer
     };
     Quiz.addAnswer(info, (err, result) => {
         if(err){
