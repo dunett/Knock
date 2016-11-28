@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.route('/notice')
     .get(showNotice)
-    .post(, upload.single(), addNotice);
+    .post(upload.single(), addNotice);
 
 router.route('/board/:u_id')
     .get(showBoard)
