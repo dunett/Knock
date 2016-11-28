@@ -1,3 +1,4 @@
+const upload = require('../utils/multerWrapper')
 const express = require('express');
 const fs = require('fs');
 const Menu = require('../model/menu.js');
@@ -6,14 +7,14 @@ const router = express.Router();
 
 router.route('/notice')
     .get(showNotice)
-    .post(addNotice);
+    .post(, upload.single(), addNotice);
 
 router.route('/board/:u_id')
     .get(showBoard)
-    .post(addQuestion);
+    .post(upload.single(), addQuestion);
 
-router.route('/board/:b_id')
-    .put(addAnswer);
+router.route('/board/:b_id', upload.single())
+    .put(upload.single(), addAnswer);
 
 module.exports = router;
 
