@@ -108,9 +108,9 @@ Mbti.getMyMbtiType = (u_id, callback) => {
     }
 
     // 1. get c_id from User table
-    // 2. get type, image, description from Characters table
+    // 2. get type, image from Characters table
     // 3. get feature from feature table
-    const sql = 'select type, image, description, f_type from Characters as C, Feature as F where C.c_id = F.c_id and C.c_id = (select c_id from User where u_id = ?)';
+    const sql = 'select type, image, f_type from Characters as C, Feature as F where C.c_id = F.c_id and C.c_id = (select c_id from User where u_id = ?)';
     conn.query(sql, [u_id], (err, rows) => {
       if (err) {
         conn.release();
@@ -122,7 +122,6 @@ Mbti.getMyMbtiType = (u_id, callback) => {
         result['msg'] = 'Success';
         result['type'] = rows[0].type;
         result['image'] = rows[0].image;
-        result['description'] = rows[0].description;
 
         // make a feature array 
         let feature = [];
@@ -136,6 +135,49 @@ Mbti.getMyMbtiType = (u_id, callback) => {
 
       conn.release();
       return callback(null, result);
+    });
+  });
+};
+
+Mbti.getDetailMbti = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql_feature = 'SELECT f_type FROM Feature WHERE c_id = (SELECT c_id FROM User WHERE u_id = ?)';
+    conn.query(sql_feature, [u_id], (err, features) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      const sql_character = 'SELECT type, image, `explain` FROM Characters WHERE c_id = (SELECT c_id FROM User WHERE u_id = ?)';
+      conn.query(sql_character, [u_id], (err, characters) => {
+        if (err) {
+          conn.release();
+          return callback(err);
+        }
+
+        const character = characters[0];
+
+        // combine detail character and features 
+        let result = {};
+        result.msg = 'Success';
+
+        result.type = character.type;
+        result.image = character.image;
+        result.explain = character.explain;
+
+        const featuresStr = features.map(feature => {
+          return feature.f_type;
+        }).join('/');
+
+        result.feature = featuresStr;
+
+        conn.release();
+        return callback(null, result);
+      });
     });
   });
 };
@@ -197,7 +239,6 @@ Mbti.getOtherMbtiType = (u_id, callback) => {
             result['data'].push({
               type: findedType.type,
               image: findedType.image,
-              description: findedType.description,
               explain: findedType.explain,
               feature: featuresStr,
             });
@@ -215,46 +256,6 @@ Mbti.getOtherMbtiType = (u_id, callback) => {
       conn.release();
       return callback(null, result);
     });
-
-    // const sql_characters = 'SELECT * FROM Characters';
-    // conn.query(sql_characters, (err, characters) => {
-    //   if (err) {
-    //     conn.release();
-    //     return callback(err);
-    //   }
-
-    //   // Select simliar and other c_id from Other table
-    //   const sql_other = 'SELECT c_id AS id from User WHERE u_id = ? UNION SELECT id from Other WHERE c_id = (SELECT c_id from User WHERE u_id = ?)';
-    //   conn.query(sql_other, [u_id, u_id], (err, others) => {
-    //     if (err) {
-    //       conn.release();
-    //       return callback(err);
-    //     }
-
-    //     let result = {};
-    //     result['msg'] = 'Success';
-    //     result['data'] = [];
-
-    //     // make a result data
-    //     for (let other of others) {
-    //       let findedType = characters.filter(char => {
-    //         return char.c_id === other.id;
-    //       })[0];
-
-    //       result['data'].push({
-    //         type: findedType.type,
-    //         image: findedType.image,
-    //         description: findedType.description,
-    //         explain: findedType.explain,
-    //       });
-    //     }
-
-    //     conn.release();
-    //     return callback(null, result);
-    //   });
-    // });
-
-
   });
 };
 
