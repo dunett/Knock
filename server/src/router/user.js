@@ -4,7 +4,7 @@ const fs = require('fs');
 const async = require('async');
 
 const User = require('../model/user');
-const upload = require('../utils/multerWrapper');
+const multer = require('../utils/multerWrapper');
 
 const gm = require('gm').subClass({ imageMagick: true });
 const path = require('path');
@@ -38,7 +38,7 @@ router.get('/user/:u_id', (req, res, next) => {
  * 프로필 수정
  * PUT /user/:u_id
  */
-router.put('/user/:u_id', upload.single('profile'), (req, res, next) => {
+router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
   // validate params
   const u_id = parseInt(req.params.u_id);
   if (isNaN(u_id)) {

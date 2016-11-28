@@ -4,6 +4,8 @@ const router = express.Router();
 const Mbti = require('../model/mbti');
 const User = require('../model/user');
 
+const multer = require('../utils/multerWrapper');
+
 /**
  * 성향테스트
  * GET /mbti
@@ -24,7 +26,7 @@ router.get('/mbti', (req, res, next) => {
  * PUT /mbti/:u_id
  * Body sample: { answer1: 0, answer2: 1, answer3: 0, ..., answer25: 0}
  */
-router.put('/mbti/:u_id', (req, res, next) => {
+router.put('/mbti/:u_id', multer.single(), (req, res, next) => {
   // Validate params
   const u_id = parseInt(req.params.u_id);
   if (isNaN(u_id)) {

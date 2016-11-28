@@ -3,11 +3,13 @@ const router = express.Router();
 
 const Report = require('../model/report');
 
+const multer = require('../utils/multerWrapper');
+
 /**
  * 상대 신고하기
  * POST /report/:r_id
  */
-router.post('/report/:r_id', (req, res, next) => {
+router.post('/report/:r_id', multer.single(), (req, res, next) => {
   // Validate params
   const r_id = parseInt(req.params.r_id);
   if (isNaN(r_id)) {

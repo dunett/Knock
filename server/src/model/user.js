@@ -9,6 +9,8 @@ class User {
 
 /**
  * Check if the alias exists 
+ * Return:
+ *  - {count: 0}
  */
 User.isExistedAlias = (alias, callback) => {
   pool.getConnection((err, conn) => {
@@ -55,12 +57,21 @@ User.isExistedUser = (u_id, callback) => {
  */
 User.addUser = (user, callback) => {
   pool.getConnection((err, conn) => {
-    if(err) {
+    if (err) {
       return callback(err);
     }
 
-    // TODO: Not finish
     const sql = 'INSERT INTO User SET ?';
+
+    conn.query(sql, [user], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null, result);
+    });
   });
 };
 
@@ -102,7 +113,7 @@ User.getProfileByUid = (u_id, callback) => {
     }
 
     // 1. select user profile
-    const sql_profile = 'SELECT name, alias, age, area, thumbnail, profile, job, height, fit, faith, hobby, status, type, description from User as U, Characters as C WHERE U.c_id = C.c_id and U.u_id = ?';
+    const sql_profile = 'SELECT name, alias, age, area, thumbnail, profile, job, height, fit, faith, hobby, status, type from User as U, Characters as C WHERE U.c_id = C.c_id and U.u_id = ?';
     conn.query(sql_profile, [u_id], (err, profiles) => {
       if (err) {
         conn.release();

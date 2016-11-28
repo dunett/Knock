@@ -3,11 +3,13 @@ const router = express.Router();
 
 const Relation = require('../model/relation');
 
+const multer = require('../utils/multerWrapper');
+
 /**
  * 찜하기
  * PUT /relation/favor/:r_id
  */
-router.put('/relation/favor/:r_id', (req, res, next) => {
+router.put('/relation/favor/:r_id', multer.single(), (req, res, next) => {
   // validate params
   const r_id = parseInt(req.params.r_id);
   if (isNaN(r_id)) {
