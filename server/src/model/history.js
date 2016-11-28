@@ -114,7 +114,7 @@ History.pastHistory = function(id, cb){
         conn.query(sql, [id, id, id], (err, results) =>{
             const cnt = results.length;
             if(cnt == 0){
-                return cb(drr, {msg: 'No result'});
+                return cb(err, {msg: 'No result'});
             }
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
