@@ -1,3 +1,4 @@
+const upload = require('../utils/multerWrapper')
 const express = require('express');
 const Quiz = require('../model/quiz.js');
 
@@ -6,13 +7,14 @@ const router=express.Router();
 
 router.route('/quiz')
 	.get(showQuiz)
-    .post(addQuiz);
+    .post(upload.single(), addQuiz);
 
 router.route('/quiz/:u_id')
-    .post(addAnswer);
+    .post(upload.single(), addAnswer);
 
 module.exports = router;
 
+// 퀴즈보기
 function showQuiz(req, res, next) {
     Quiz.getQuiz((err,result) => {
         if(err) {
@@ -22,6 +24,8 @@ function showQuiz(req, res, next) {
     });
 }
 
+
+// 퀴즈입력
 function addQuiz(req, res, next) {
     const q1 = req.body.question1;
     const q2 = req.body.question2;
@@ -44,6 +48,7 @@ function addQuiz(req, res, next) {
     });
 }
 
+// 답변입력
 function addAnswer(req, res) {
     const u_id = req.params.u_id;
     const q_id = req.body.q_id;

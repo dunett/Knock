@@ -1,3 +1,4 @@
+const upload = require('../utils/multerWrapper')
 const express = require('express');
 const fs = require('fs');
 const History = require('../model/history.js');

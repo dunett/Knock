@@ -55,8 +55,8 @@ Knock.today = function(id, cb){
 }
 
 function selection1(id, conn, td){
-    const sql1 = "SELECT u.u_id FROM User u, Characters c WHERE u.c_id = c.c_id AND u_id != ? AND u.c_id = (SELECT c_id FROM User WHERE u_id = ?) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) order by rand() limit 1";
-    conn.query(sql1, [id, id, id], (err, result) =>{
+    const sql1 = "SELECT u.u_id FROM User u, Characters c WHERE u.c_id = c.c_id AND u_id != ? AND u.c_id = (SELECT c_id FROM User WHERE u_id = ?) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) AND u.age BETWEEN (SELECT age_max FROM User WHERE u_id = ?) AND (SELECT age_min FROM User WHERE u_id = ?) order by rand() limit 1";
+    conn.query(sql1, [id, id, id, id, id], (err, result) =>{
         if(err){
             err.code = 500;
             return td(err);
@@ -80,8 +80,8 @@ function selection1(id, conn, td){
 }
 
 function selection2(id, conn, td){
-    const sql1 = "SELECT u.u_id, c.type FROM User u, Characters c WHERE u.c_id = c.c_id AND u.c_id IN (SELECT id FROM Other WHERE c_id= (SELECT c_id FROM User WHERE u_id= ?) AND similar=1 order by rand()) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) order by rand() limit 1";
-    conn.query(sql1, [id, id], (err, result) =>{
+    const sql1 = "SELECT u.u_id, c.type FROM User u, Characters c WHERE u.c_id = c.c_id AND u.c_id IN (SELECT id FROM Other WHERE c_id= (SELECT c_id FROM User WHERE u_id= ?) AND similar=1 order by rand()) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) AND u.age BETWEEN (SELECT age_max FROM User WHERE u_id = ?) AND (SELECT age_min FROM User WHERE u_id = ?) order by rand() limit 1";
+    conn.query(sql1, [id, id, id, id], (err, result) =>{
         if(err){
             err.code = 500;
             return td(err);
@@ -104,7 +104,7 @@ function selection2(id, conn, td){
 }
 
 function selection3(id, conn, td){
-    const sql1 = "SELECT u.u_id, c.type FROM User u, Characters c WHERE u.c_id = c.c_id AND u.c_id IN (SELECT id FROM Other WHERE c_id= (SELECT c_id FROM User WHERE u_id= ?) AND similar=0 order by rand()) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) order by rand() limit 1";
+    const sql1 = "SELECT u.u_id, c.type FROM User u, Characters c WHERE u.c_id = c.c_id AND u.c_id IN (SELECT id FROM Other WHERE c_id= (SELECT c_id FROM User WHERE u_id= ?) AND similar=0 order by rand()) AND u.u_id NOT IN (SELECT receiver FROM Destiny WHERE sender = ?) AND u.age BETWEEN (SELECT age_max FROM User WHERE u_id = ?) AND (SELECT age_min FROM User WHERE u_id = ?) order by rand() limit 1";
     conn.query(sql1, [id, id], (err, result) =>{
         if(err){
             err.code = 500;

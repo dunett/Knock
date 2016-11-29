@@ -3,6 +3,21 @@ const pool = require('./dbConnection');
 class Key {
 }
 
+Key.showKey = function(id, cb){
+    pool.getConnection(function (err, conn){
+        const sql = 'SELECT money FROM User where u_id = ?';
+        conn.query(sql, id, function (err, result){
+            if(err){
+                err.code = 500;
+                conn.release();
+                return cb(err, {msg: 'Failure'});
+            }
+            conn.release();
+            return cb(null, result)
+        })
+    })
+}
+
 // 머니변동내역
 Key.chgKey = function(info, cb){
     pool.getConnection(function (err, conn) {
