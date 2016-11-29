@@ -30,8 +30,8 @@
           var r_id = $('#room').val();
           var from = $('#from').val();
           var to = $('#to').val();
-
-          socket.emit('joinRoom', { from: from, room: r_id });  
+          
+          socket.emit('joinRoom', { room: r_id });  
         });
 
         $('form').submit(function() {

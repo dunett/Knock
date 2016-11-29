@@ -117,7 +117,8 @@ module.exports = function (http) {
         } else {
           saveChatMessage(param).then(() => {
             // Live chat
-            io.in(room).emit(Send_Message, data.message);
+            const msg = JSON.stringify(data);
+            io.in(room).emit(Send_Message, msg);
           }).catch(err => {
             if (err) {
               console.error('saveChatMessage error:', err.stack);
