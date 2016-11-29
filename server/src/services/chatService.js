@@ -18,8 +18,27 @@ let rooms = [];
 
 const client = require('redis').createClient();
 
+/**
+ * Chat.saveChatMessage is wrapped in the promise
+ * Params:
+ *  - arg: r_id, from, to, message
+ */
+const saveChatMessage = (arg) => {
+  return new Promise((resolve, reject) => {
+    Chat.saveChatMessage(arg, (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve();
+    });
+  });
+};
+
 module.exports = function (http) {
   var io = socketio(http);
+
+  // set socket.io-redis
   io.adapter(redis({
     host: redisInfo.host,
     port: redisInfo.port,
@@ -33,7 +52,7 @@ module.exports = function (http) {
   io.on('connection', socket => {
     // room id
     let room = '';
-    // console.log('a user connnted');
+    console.log('a user connnted');
 
     /**
      * Join the room
@@ -62,6 +81,8 @@ module.exports = function (http) {
      *   - data: {from: 'FromAlias', to: 'ToAlias', message: 'messages'}  
      */
     socket.on(Send_Message, (data) => {
+      console.log(data);
+      
       client.get(room, (err, count) => {
         if (err) {
           console.error(err);
@@ -73,38 +94,36 @@ module.exports = function (http) {
           return;
         }
 
-        if (count == 1) {
-          Chat.saveChatMessage({
-            r_id: room,
-            from: data.from,
-            to: data.to,
-            message: data.message
-          }, (err, result) => {
-            if (err) {
-              console.error('saveChatMessage error:', err.stack);
-              //socket.emit('foo', 'Server error');
-              return;
-            }
+        const param = {
+          r_id: room,
+          from: data.from,
+          to: data.to,
+          message: data.message,
+        };
 
+        if (count == 1) {
+          saveChatMessage(param).then(() => {
             // TODO: push notification
             // Send push notification when there is only one person in chat room
             console.log('======== PUSH NOTIFICATION ========');
-          });
-        } else {
-          Chat.saveChatMessage({
-            r_id: room,
-            from: data.from,
-            to: data.to,
-            message: data.message
-          }, (err, result) => {
+          }).catch(err => {
             if (err) {
               console.error('saveChatMessage error:', err.stack);
               //socket.emit('foo', 'Server error');
               return;
             }
+          });
 
+        } else {
+          saveChatMessage(param).then(() => {
             // Live chat
             io.in(room).emit(Send_Message, data.message);
+          }).catch(err => {
+            if (err) {
+              console.error('saveChatMessage error:', err.stack);
+              //socket.emit('foo', 'Server error');
+              return;
+            }
           });
         }
       });
@@ -123,7 +142,7 @@ module.exports = function (http) {
           }
         }
       }
-      //console.log('disconnected');
+      console.log('disconnected');
     });
 
   });
