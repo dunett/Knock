@@ -15,7 +15,8 @@
   </head>
   <body>
       <input id="room" type="text" name="room" value="" placeholder="room" style="position: absolute; top:0; right:0;"><button id="btn">Room</button>
-      <input id="name" type="text" name="name" value="" placeholder="name" style="position: absolute; top:0; right:0; margin-top: 30px;">      
+      <input id="from" type="text" value="" placeholder="from" style="position: absolute; top:0; right:0; margin-top: 30px;">
+      <input id="to" type="text" value="" placeholder="to" style="position: absolute; top:0; right:0; margin-top: 60px;">      
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
@@ -27,13 +28,19 @@
 
         $('#btn').on('click', function(e) {
           var r_id = $('#room').val();
-          socket.emit('joinRoom', { room: r_id });  
+          var from = $('#from').val();
+          var to = $('#to').val();
+
+          socket.emit('joinRoom', { from: from, room: r_id });  
         });
 
         $('form').submit(function() {
             var message = $('#m').val();
-            $('#messages').append($('<li>').text(message));
-            socket.emit('sendMessage', {from: 'OneAlias', to: 'ThreeAlias', message: message});
+            var from = $('#from').val();
+            var to = $('#to').val();
+
+            //$('#messages').append($('<li>').text(message));
+            socket.emit('sendMessage', {from: from, to: to, message: message});
             $('#m').val('');
             return false;
         });
