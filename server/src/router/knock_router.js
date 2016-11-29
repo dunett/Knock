@@ -1,3 +1,4 @@
+const upload = require('../utils/multerWrapper')
 const express = require('express');
 const Knock = require('../model/knock.js');
 
@@ -5,10 +6,10 @@ const Knock = require('../model/knock.js');
 var router=express.Router();
 
 router.route('/knock/send')
-    .post(addRel);
+    .post(upload.single(), addRel);
 
 router.route('/knock/accept/:r_id')
-    .put(chgRel);
+    .put(upload.single(), chgRel);
 
 router.route('/knock/today/:u_id')
     .get(today);

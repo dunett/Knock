@@ -18,8 +18,20 @@ Menu.showNotice = function(cb){
     })
 }
 
-Menu.addNotice = function(){
-
+Menu.addNotice = function(info, cb){
+    pool.getConnection(function(err, conn){
+        const sql = 'INSERT INTO Notice SET ?'
+        conn.query(sql, info, (err, result) =>{
+            if(err){
+                err.code = 500;
+                conn.release();
+                return cb(err, {msg: 'Failure'});
+            }
+            conn.commit();
+            conn.release();
+            return cb(null, {msg: 'Success'});
+        })
+    })
 }
 
 Menu.showBoard = function(id, cb){

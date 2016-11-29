@@ -1,3 +1,4 @@
+const upload = require('../utils/multerWrapper')
 const express = require('express');
 const Key = require('../model/key.js');
 
@@ -6,7 +7,7 @@ const router=express.Router();
 
 router.route('/key/:u_id')
 	.get(showKey)
-    .post(chgKey);
+    .post(upload.single(), chgKey);
 
 module.exports = router;
 
