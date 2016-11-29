@@ -18,13 +18,15 @@ let rooms = [];
 
 const client = require('redis').createClient();
 
+console.log(Chat);
+
 /**
  * Chat.saveChatMessage is wrapped in the promise
  * Params:
  *  - arg: r_id, from, to, message
  */
 const saveChatMessage = (arg) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {    
     Chat.saveChatMessage(arg, (err, result) => {
       if (err) {
         return reject(err);
