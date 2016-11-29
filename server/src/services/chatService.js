@@ -60,6 +60,8 @@ module.exports = function (http) {
      *  - data: { room: r_id }
      */
     socket.on(Join_Room, (data) => {
+      console.log('joined user');
+
       // join the room
       room = data.room;
       socket.join(data.room);
