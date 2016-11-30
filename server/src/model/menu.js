@@ -48,6 +48,20 @@ Menu.showBoard = function(id, cb){
     })
 }
 
+Menu.showQuestion = function(cb){
+    pool.getConnection(function(err, conn){
+        const sql = 'SELECT b.b_id, u.alias, b.question FROM User u, Board b WHERE u.u_id = b.writer AND b.answer is null order by q_date asc limit 1';
+        conn.query(sql,function(err, results){
+            if(err){
+                err.code = 500;
+                conn.release();
+                return cb(err, {msg: 'Failure'});
+            }
+            return cb(null, results);
+        })
+    })
+}
+
 Menu.addQuestion = function(info, cb){
     pool.getConnection(function(err, conn){
         const sql = 'INSERT INTO Board SET ?';

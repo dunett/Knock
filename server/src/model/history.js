@@ -48,7 +48,7 @@ History.totalHistory = function(id, cb){
                 if(err){
                     return cb(err, err.message);
                 }
-                return cb(null, {msg: 'Success', total: results});
+                return cb(null, {total: results});
             }
         );
 }
@@ -69,7 +69,7 @@ History.eachHistory = function(id, cb){
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
             conn.release();
-            return cb(null, {each: {count: cnt, one: three, two: other}});
+            return cb(null, {msg: "Success", each: {count: cnt, one: three, two: other}});
         })
     })
 }
@@ -87,7 +87,7 @@ History.meHistory = function(id, cb){
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
             conn.release();
-            return cb(null, {me: {count: cnt, one: three, two: other}});
+            return cb(null, {msg: "Success", me: {count: cnt, one: three, two: other}});
         })
     })
 }
@@ -103,7 +103,7 @@ History.youHistory = function(id, cb){
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
             conn.release();
-            return cb(null, {you: {count: cnt, one: three, two: other}});
+            return cb(null, {msg: "Success", you: {count: cnt, one: three, two: other}});
         })
     })
 }
@@ -119,7 +119,7 @@ History.pastHistory = function(id, cb){
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
             conn.release();
-            return cb(null, {past: {count: cnt, one: three, two: other}});
+            return cb(null, {msg: "Success", past: {count: cnt, one: three, two: other}});
         })
     })
 }

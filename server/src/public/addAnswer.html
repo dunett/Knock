@@ -1,0 +1,45 @@
+<html>
+    <script language='javascript' type='text/javascript'>
+        window.onload= function(){
+            var request = new XMLHttpRequest();
+            
+            request.open('get', './QNA', true);
+
+            request.onreadystatechange = function(e){
+                if(request.readyState == 4){
+                    if(request.status == 200){
+                        var data = JSON.parse(request.responseText);
+                        //alert(data[0].question);
+                        var id = document.getElementById('id');
+                        id.value = data[0].b_id;
+                        var qus = document.getElementById('qus');
+                        qus.innerHTML=data[0].question;
+                        var per = document.getElementById('per');
+                        per.innerHTML=data[0].alias;
+                    }
+                }
+            }
+            request.send();
+        }
+    </script>
+    <body>
+        <form method='post' enctype="multipart/form-data"  action='../QNA'>
+        <input type="hidden" name="id" id="id">
+        <table width="600px" height="100px">
+            <tr>
+                <th width="10%">질문</th>
+                <td id="qus"></td>
+                <th width="10%">질문자</th>
+                <td id="per"></td>
+            </tr>
+            <tr>
+                <th width="10%">답변</th>
+                <td colspan="3"><input type='text' name='answer' id="asw" size="50"></td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right"><input type='submit' value='올리기'></td>
+            </tr>
+        </table>
+        </form>
+    </body>
+</html>

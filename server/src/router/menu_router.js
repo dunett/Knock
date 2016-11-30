@@ -21,8 +21,9 @@ router.route('/board/:u_id')
     .get(showBoard)
     .post(upload.single(), addQuestion);
 
-router.route('/board/:b_id', upload.single())
-    .put(upload.single(), addAnswer);
+router.route('/QNA')
+    .get(showQuestion)
+    .post(upload.single(), addAnswer);
 
 module.exports = router;
 
@@ -95,6 +96,16 @@ function showBoard(req, res, next){
     })
 }
 
+// 질문보기
+function showQuestion(req, res, next){
+    Menu.showQuestion((err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
 // 질문등록
 function addQuestion(req, res, next){
     const id = req.params.u_id;
@@ -113,12 +124,12 @@ function addQuestion(req, res, next){
 
 // 답변등록
 function addAnswer(req, res, next){
-    const id = req.params.b_id;
+    const id = req.body.id;
     const answer = req.body.answer;
     Menu.addAnswer(answer, id, (err, result) =>{
         if(err){
             return next(err);
         }
-        res.send(result);
+        res.redirect('./addAnswer.html');
     })
 }
