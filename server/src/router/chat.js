@@ -58,7 +58,7 @@ router.get('/chat/list/:u_id', (req, res, next) => {
           return next(err);
         }
 
-        if(lastMessages.msg !== 'Success') {
+        if (lastMessages.msg !== 'Success') {
           return res.send(lastMessages);
         }
 
@@ -93,7 +93,7 @@ router.get('/chat/list/:u_id', (req, res, next) => {
               return relation.r_id == item.r_id;
             })[0];
 
-            if(find) {
+            if (find) {
               relation.data = {
                 message: find.message,
                 date: find.date,
@@ -104,8 +104,8 @@ router.get('/chat/list/:u_id', (req, res, next) => {
 
           // If relation has not data property, there is no chat room.
           const list = relations.filter((relation) => {
-            return relation.data !== undefined; 
-          }); 
+            return relation.data !== undefined;
+          });
 
           let result = {
             msg: 'Success',
@@ -123,14 +123,16 @@ router.get('/chat/list/:u_id', (req, res, next) => {
  * 대화 내용
  * GET /chat/:r_id
  */
-router.get('/chat/:r_id', (req, res, next) => {
+router.get('/chat/:r_id/:alias', (req, res, next) => {
   // validate params
   const r_id = parseInt(req.params.r_id);
-  if (isNaN(r_id)) {
+  const alias = req.params.alias;
+
+  if (isNaN(r_id) || !alias) {
     return next(new Error('Not correct request'));
   }
 
-  Chat.getMessagesByRid(r_id, (err, result) => {
+  Chat.getMessagesByRid(r_id, alias, (err, result) => {
     if (err) {
       return next(err);
     }
@@ -146,7 +148,7 @@ router.get('/chat/:r_id', (req, res, next) => {
  */
 router.post('/chat/:r_id', (req, res, next) => {
   // TODO: 대화하기: 어차피 socket.io 통신하면 post는 필요 없을듯??
-  
+
   // // validate params
   // const r_id = parseInt(req.params.r_id);
   // if (isNaN(r_id)) {

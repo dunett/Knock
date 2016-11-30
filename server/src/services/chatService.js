@@ -136,6 +136,9 @@ module.exports = function (http) {
         };
 
         if (count == 1) {
+          // if it is not live chat , save the message as unread
+          param.check = false;
+
           saveChatMessage(param).then(() => {
             // TODO: push notification
             // Send push notification when there is only one person in chat room
@@ -149,6 +152,9 @@ module.exports = function (http) {
           });
 
         } else {
+          // If it is live chat, save the message as read
+          param.check = true;
+
           saveChatMessage(param).then(() => {
             // Live chat
             const msg = JSON.stringify(data);

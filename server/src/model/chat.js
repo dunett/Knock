@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const async = require('async');
 
+const Timezon_Kor = 60 * 1000 * 60 * 9;
+
 const Chat = mongoose.Schema({
   r_id: Number,
   sender: Number,
@@ -24,18 +26,21 @@ const Chat = mongoose.Schema({
  *    - from: sender nickname
  *    - to: receiver nickname
  *    - message: text
+ *    - check: read or unread
  */
 Chat.statics.saveChatMessage = function saveChatMessage(arg, callback) {
   this.findOne({ r_id: arg.r_id }, (err, chat) => {
     if (err) return callback(err);
     if (!chat) return callback(new Error('Chat not found'));
 
+    const now = new Date();
+
     chat.messages.unshift({
       from: arg.from,
       to: arg.to,
       message: arg.message,
-      date: new Date(),
-      check: false
+      date: new Date(now.getTime() + Timezon_Kor),
+      check: arg.check || false
     });
 
     chat.save(err => {
@@ -152,30 +157,43 @@ Chat.statics.getUnreadMessageCount = function getUnreadMessageCount(r_ids, alias
  * Get the all messages of room
  * Params:
  *  - r_id: room id
+ *  - alias: own alias
  * Return:
  *  - { msg: 'Success', data: [{from: 'Me', to: 'You', message: 'Hello', date: '2016-11-23T01:34:46.636Z', check: false}, ...] }
  */
-Chat.statics.getMessagesByRid = function getMessagesByRid(r_id, callback) {
+Chat.statics.getMessagesByRid = function getMessagesByRid(r_id, alias, callback) {
   const projection = {
-    _id: false,
-    r_id: false,
-    sender: false,
-    receiver: false,
-    __v: false,
     'messages._id': false,
   };
 
-  this.find({ r_id: r_id }, projection)
-    .exec((err, rows) => {
+  this.findOne({ r_id: r_id }, projection)
+    .exec((err, chat) => {
       if (err) {
         return callback(err);
       }
 
-      let result = {};
-      result.msg = 'Success';
-      result.data = (rows[0] === undefined) ? [] : rows[0].messages;
+      if (!chat) {
+        return callback(null, { msg: 'Not found chat' });
+      }
 
-      return callback(null, result);
+      // If you did not check the message from the other party, change it to read.
+      for (let message of chat.messages) {
+        if (message.to == alias) {
+          message.check = true;
+        }
+      }
+
+      chat.save(err => {
+        if (err) {
+          return callback(null, chat);
+        }
+
+        let result = {};
+        result.msg = 'Success';
+        result.data = (chat === undefined) ? [] : chat.messages;
+
+        return callback(null, result);
+      });
     });
 };
 
