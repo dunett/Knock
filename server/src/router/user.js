@@ -77,8 +77,8 @@ router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
     }
 
     async.waterfall([
-      async.apply(makeThumbnail, profile),
-      uploadProfileToS3,
+      //async.apply(makeThumbnail, profile),
+      async.apply(uploadProfileToS3, profile),
       async.apply(editProfile, changes),
     ], (err, images) => {
       removeFiles(images);
@@ -90,10 +90,11 @@ router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
 
       // If profile is changed, remove old profile and thumbnail in S3
       let profileName = path.basename(oldImage.profile);
-      let thumbnailName = path.basename(oldImage.thumbnail);
+      //let thumbnailName = path.basename(oldImage.thumbnail);
 
       // Return if there is no previous image 
-      if (!profileName && !thumbnailName) {
+      //if (!profileName && !thumbnailName) {
+      if (!profileName) {
         return res.send({ msg: 'Success' });
       }
 
@@ -102,7 +103,8 @@ router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
         return res.send({ msg: 'Success' });
       }
 
-      const oldImages = [{ name: profileName }, { name: thumbnailName }];
+      //const oldImages = [{ name: profileName }, { name: thumbnailName }];
+      const oldImages = [{ name: profileName }];
 
       // If you uploaded a new image, delete the old image
       async.eachSeries(oldImages, (oldImage, next) => {
@@ -135,13 +137,13 @@ router.put('/user/:u_id/sleep', (req, res, next) => {
   const u_id = parseInt(req.params.u_id);
   if (isNaN(u_id)) {
     return next(new Error('Not correct request'));
-  }  
+  }
 
   User.toggleStatusByUid(u_id, (err, result) => {
-    if(err) {
+    if (err) {
       return next(err);
     }
-    
+
     res.send(result);
   });
 });
@@ -174,13 +176,17 @@ const makeThumbnail = (profile, callback) => {
     });
 };
 
-const uploadProfileToS3 = (profile, thumbnail, callback) => {
+// If you use the thumbnail, use the below code
+//const uploadProfileToS3 = (profile, thumbnail, callback) => {
+// If you don't use the thumbnail, use the below code
+const uploadProfileToS3 = (profile, callback) => {
   if (!profile) {
     return callback(null, null);
   }
 
   // upload profile and thumbnail to s3
-  const images = [profile, thumbnail];
+  //const images = [profile, thumbnail];
+  const images = [profile];
   let imagesUrl = [];
 
   async.eachSeries(images, (image, next) => {
@@ -213,7 +219,7 @@ const uploadProfileToS3 = (profile, thumbnail, callback) => {
 const editProfile = (changes, imagesUrl, callback) => {
   if (imagesUrl && imagesUrl.length >= 1) {
     changes.profile = imagesUrl[0].url;
-    changes.thumbnail = imagesUrl[1].url;
+    // changes.thumbnail = imagesUrl[1].url;
   }
 
   User.editProfileByUid(changes, (err, result) => {

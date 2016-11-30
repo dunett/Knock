@@ -4,7 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production pm2 start server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "pm2": "pm2 start server.js -i 4",
+    "port": "cross-env PORT=3001 nodemon server.js"    
   },
   "author": "",
   "license": "ISC",
