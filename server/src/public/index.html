@@ -1,29 +1,70 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-  </head>
-  <body>
-      <input id="room" type="text" name="room" value="" placeholder="room" style="position: absolute; top:0; right:0;"><button id="btn">Room</button>
-      <input id="from" type="text" value="" placeholder="from" style="position: absolute; top:0; right:0; margin-top: 30px;">
-      <input id="to" type="text" value="" placeholder="to" style="position: absolute; top:0; right:0; margin-top: 60px;">      
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
+
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font: 13px Helvetica, Arial;
+    }
+    
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
+    
+    form button {
+      width: 9%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
+    
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #messages li {
+      padding: 5px 10px;
+    }
+    
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <input id="room" type="text" name="room" value="" placeholder="room" style="position: absolute; top:0; right:0;">
+  <button id="btn">Room</button><button style="margin-left: 10px;" id="btnLeave">Leave Room</button>
+
+  <input id="from" type="text" value="" placeholder="from" style="position: absolute; top:0; right:0; margin-top: 30px;">
+  <input id="to" type="text" value="" placeholder="to" style="position: absolute; top:0; right:0; margin-top: 60px;">
+  <ul id="messages"></ul>
+  <form action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
         var socket = io();        
 
         $('#btn').on('click', function(e) {
@@ -34,26 +75,51 @@
           socket.emit('joinRoom', { room: r_id });  
         });
 
+        $('#btnLeave').on('click', function(e) {
+          var r_id = $('#room').val();
+          var from = $('#from').val();
+          socket.emit('leaveRoom', { room: r_id });
+
+          $('#room').val('');
+          $('#from').val('');
+          $('#to').val('');   
+
+          $('ul').remove();       
+
+          socket.disconnect();
+        });
+
         $('form').submit(function() {
             var message = $('#m').val();
             var from = $('#from').val();
             var to = $('#to').val();
 
-            //$('#messages').append($('<li>').text(message));
+            $('#messages').append($('<li>').text(message));
             socket.emit('sendMessage', {from: from, to: to, message: message});
             $('#m').val('');
             return false;
         });
 
-        //socket.emit('joinRoom', {room: r_id});
-
         socket.on('sendMessage', function(msg){
             $('#messages').append($('<li>').text(msg));
         });        
 
+        socket.on('leaveRoom', function(msg) {
+          $('#messages').append($('<li>').text(msg));
+
+          $('#room').val('');
+          $('#from').val('');
+          $('#to').val('');   
+
+          $('ul').remove();       
+
+          socket.disconnect();
+        })
+
         socket.on('foo', function(err) {
           $('#messages').append($('<li>').text(err));
         });
-    </script>    
-  </body>
+    </script>
+</body>
+
 </html>

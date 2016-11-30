@@ -99,4 +99,28 @@ Relation.toggleToWishlist = (r_id, u_id, callback) => {
   });
 };
 
+/**
+ * Delete the relation
+ * Params:
+ *  - r_id: relation id
+ */
+Relation.deleteRelationByRid = (r_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = 'DELETE FROM Relation WHERE r_id = ?';
+    conn.query(sql, [r_id], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null);
+    });
+  });
+};
+
 module.exports = Relation;

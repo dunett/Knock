@@ -4,10 +4,12 @@ const socketio = require('socket.io');
 const redis = require('socket.io-redis');
 
 const Chat = require('../model/chat');
+const Relation = require('../model/relation');
 
 // Constant variables
 const Send_Message = 'sendMessage';
 const Join_Room = 'joinRoom';
+const Leave_Room = 'leaveRoom';
 
 const redisInfo = {
   host: process.env.REDIS_HOST,
@@ -24,7 +26,7 @@ const client = require('redis').createClient();
  *  - arg: r_id, from, to, message
  */
 const saveChatMessage = (arg) => {
-  return new Promise((resolve, reject) => {    
+  return new Promise((resolve, reject) => {
     Chat.saveChatMessage(arg, (err, result) => {
       if (err) {
         return reject(err);
@@ -57,9 +59,9 @@ module.exports = function (http) {
     /**
      * Join the room
      * Params:
-     *  - data: { room: r_id }
+     *  - data: { room: 1 }
      */
-    socket.on(Join_Room, (data) => {
+    socket.on(Join_Room, data => {
       console.log('joined user');
 
       // join the room
@@ -78,13 +80,43 @@ module.exports = function (http) {
     });
 
     /**
+     * Leave the room
+     * Params:
+     *  - data: { room: 1 }
+     */
+    socket.on(Leave_Room, data => {
+      console.log('Leaved room');
+
+      // Delete chat document and relation table    
+      Chat.deleteChatByRid(data.room, err => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        Relation.deleteRelationByRid(data.room, err => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          const msg = JSON.stringify({ msg: 'Success' });
+          //io.in(data.room).emit(Leave_Room, msg);         // include sender
+          socket.to(data.room).emit(Leave_Room, msg);       // except  sender
+
+          socket.leave(data.room);
+        });
+      });
+    });
+
+    /**
      * Send message
      *  Params:
      *   - data: {from: 'FromAlias', to: 'ToAlias', message: 'messages'}  
      */
-    socket.on(Send_Message, (data) => {
+    socket.on(Send_Message, data => {
       console.log(data);
-      
+
       client.get(room, (err, count) => {
         if (err) {
           console.error(err);
@@ -120,7 +152,8 @@ module.exports = function (http) {
           saveChatMessage(param).then(() => {
             // Live chat
             const msg = JSON.stringify(data);
-            io.in(room).emit(Send_Message, msg);
+            //io.in(room).emit(Send_Message, msg);          // include sender
+            socket.to(room).emit(Send_Message, msg);        // except  sender
           }).catch(err => {
             if (err) {
               console.error('saveChatMessage error:', err.stack);
