@@ -148,6 +148,26 @@ router.put('/user/:u_id/sleep', (req, res, next) => {
   });
 });
 
+/**
+ * 계정 탈퇴
+ * PUT /user/:u_id/black
+ */
+router.put('/user/:u_id/black', (req, res, next) => {
+  // validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }
+
+  User.leaveAccount(u_id, err => {
+    if (err) {
+      return next(err);
+    }
+
+    res.send({ msg: 'Success' });
+  });
+});
+
 const makeThumbnail = (profile, callback) => {
   // make a thumbnail
   if (!profile) {
