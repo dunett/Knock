@@ -1,8 +1,11 @@
 var pool = require('./dbConnection');
 
 const Quiz_Limit_Count = 7;
+
 const Status_Normal = 1;
+const Status_Bad = 2;
 const Status_Sleep = 3;
+const Status_Leave = 4;
 
 class User {
 }
@@ -160,11 +163,12 @@ User.editProfileByUid = (args, callback) => {
     let sql = 'UPDATE User SET ? WHERE u_id = ?';
 
     let param = {};
+    if (args.area) param.area = args.area;
     if (args.job) param.job = args.job;
-    if (args.height) param.height = args.height;
-    if (args.fit) param.fit = args.fit;
+    if (args.school) param.school = args.school;
     if (args.faith) param.faith = args.faith;
-    if (args.hobby) param.hobby = args.hobby;
+    if (args.fit) param.fit = args.fit;
+    if (args.height) param.height = args.height;
     if (args.profile) {
       param.profile = args.profile;
       param.thumbnail = args.profile;
@@ -210,8 +214,10 @@ User.getProfileAndThumbnailByUid = (u_id, callback) => {
 /**
  * Toggle status of user to Normal or Sleep
  * Status:
- *  - 1: Normal
- *  - 3: Sleep 
+ *  - 1: Normal user
+ *  - 2: Bad user
+ *  - 3: Sleep user
+ *  - 4: Leave user
  */
 User.toggleStatusByUid = (u_id, callback) => {
   pool.getConnection((err, conn) => {
@@ -229,6 +235,28 @@ User.toggleStatusByUid = (u_id, callback) => {
 
       conn.release();
       return callback(null, { msg: 'Success' });
+    });
+  });
+};
+
+/**
+ * Leave account 
+ */
+User.leaveAccount = (u_id, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = `UPDATE User SET status = ${Status_Leave} WHERE u_id = ?`;
+    conn.query(sql, [u_id], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null);
     });
   });
 };

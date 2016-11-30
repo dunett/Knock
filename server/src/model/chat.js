@@ -179,4 +179,19 @@ Chat.statics.getMessagesByRid = function getMessagesByRid(r_id, callback) {
     });
 };
 
+/**
+ * Delete the chat document
+ * Params:
+ *  - r_id: room id
+ */
+Chat.statics.deleteChatByRid = function deleteChatByRid(r_id, callback) {
+  this.remove({ r_id: r_id }, err => {
+    if (err) {
+      return clalback(err);
+    }
+
+    return callback(null);
+  });
+};
+
 module.exports = mongoose.model('Chat', Chat);

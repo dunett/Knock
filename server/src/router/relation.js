@@ -43,8 +43,7 @@ router.delete('/relation/disconnect/:r_id', (req, res, next) => {
     return next(new Error('Not correct request'));
   }
 
-  // TODO: 상대가 연결 끊었을 때 Chat, Relation을 날려버리면
-  // 내 채팅 목록에서 안보이게 되어 상대가 연결 끊었는지 알 수 없음.
+  // TODO: 상대가 연결 끊었을 때 Chat, Relation을 날리기
 });
 
 module.exports = router;

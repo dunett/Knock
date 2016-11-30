@@ -51,23 +51,25 @@ router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
   }
 
   const profile = req.file;
+  const area = req.body.area;
   const job = req.body.job;
-  const height = req.body.height;
-  const fit = req.body.fit;
+  const school = req.body.school;
   const faith = req.body.faith;
-  const hobby = req.body.hobby;
+  const fit = req.body.fit;
+  const height = req.body.height;
 
-  if (!profile && !job && !height && !fit && !faith && !hobby) {
+  if (!profile && !area && !job && !school && !faith && !fit && !height) {
     return next(new Error('Not correct body message'));
   }
 
   const changes = {
     u_id: u_id,
+    area: area || undefined,
     job: job || undefined,
-    height: height || undefined,
-    fit: fit || undefined,
+    school: school || undefined,
     faith: faith || undefined,
-    hobby: hobby || undefined,
+    fit: fit || undefined,
+    height: height || undefined,
   };
 
   // Get old profile and thumbnail to remove after upload
@@ -145,6 +147,26 @@ router.put('/user/:u_id/sleep', (req, res, next) => {
     }
 
     res.send(result);
+  });
+});
+
+/**
+ * 계정 탈퇴
+ * PUT /user/:u_id/black
+ */
+router.put('/user/:u_id/black', (req, res, next) => {
+  // validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }
+
+  User.leaveAccount(u_id, err => {
+    if (err) {
+      return next(err);
+    }
+
+    res.send({ msg: 'Success' });
   });
 });
 
