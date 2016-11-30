@@ -163,11 +163,12 @@ User.editProfileByUid = (args, callback) => {
     let sql = 'UPDATE User SET ? WHERE u_id = ?';
 
     let param = {};
+    if (args.area) param.area = args.area;
     if (args.job) param.job = args.job;
-    if (args.height) param.height = args.height;
-    if (args.fit) param.fit = args.fit;
+    if (args.school) param.school = args.school;
     if (args.faith) param.faith = args.faith;
-    if (args.hobby) param.hobby = args.hobby;
+    if (args.fit) param.fit = args.fit;
+    if (args.height) param.height = args.height;
     if (args.profile) {
       param.profile = args.profile;
       param.thumbnail = args.profile;
