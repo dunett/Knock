@@ -165,8 +165,11 @@ User.editProfileByUid = (args, callback) => {
     if (args.fit) param.fit = args.fit;
     if (args.faith) param.faith = args.faith;
     if (args.hobby) param.hobby = args.hobby;
-    if (args.profile) param.profile = args.profile;
-    if (args.thumbnail) param.thumbnail = args.thumbnail;
+    if (args.profile) {
+      param.profile = args.profile;
+      param.thumbnail = args.profile;
+    }
+    // if (args.thumbnail) param.thumbnail = args.thumbnail;
 
     conn.query(sql, [param, args.u_id], (err, result) => {
       if (err) {
