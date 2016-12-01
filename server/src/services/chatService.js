@@ -116,7 +116,8 @@ module.exports = function (http) {
      *   - data: {from: 'FromAlias', to: 'ToAlias', message: 'messages'}  
      */
     socket.on(Send_Message, data => {
-      console.log(data);
+      console.log('======== send message ========');
+      console.log(data, room);
 
       client.get(room, (err, count) => {
         if (err) {
@@ -173,19 +174,22 @@ module.exports = function (http) {
     });
 
     socket.on('disconnect', () => {
-      // if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
-      //   for (let i = rooms[room].length - 1; i >= 0; i--) {
-      //     if (rooms[room][i] == socket.id) {
-      //       // delete socket.id
-      //       rooms[room].splice(i, 1);
+       console.log('======== disconnect =======');
+       console.log('Before delete rooms:', rooms);
+       if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
+         for (let i = rooms[room].length - 1; i >= 0; i--) {
+           if (rooms[room][i] == socket.id) {
+             // delete socket.id
+             rooms[room].splice(i, 1);
 
-      //       // decrement cliet count in redis
-      //       client.decr(room);
-      //       break;
-      //     }
-      //   }
-      // }
-      console.log('disconnected ', room);
+             // decrement cliet count in redis
+             client.decr(room);
+             break;
+           }
+         }
+       }
+      console.log('After delete rooms: ', rooms);
+      console.log('======= disconnected ========', room);
     });
 
   });
