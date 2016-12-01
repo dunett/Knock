@@ -39,6 +39,7 @@ const saveChatMessage = (arg) => {
 
 module.exports = function (http) {
   var io = socketio(http);
+  //var io = socketio(http, { pingTimeout: 60000 });
 
   // set socket.io-redis
   io.adapter(redis({
@@ -48,13 +49,14 @@ module.exports = function (http) {
 
   // // initialize all key in redis
   client.flushdb((err, succeeded) => {
-    console.log(succeeded);
+    console.log('Redis flush: ', succeeded);
   });
 
   io.on('connection', socket => {
     // room id
     let room = '';
-    console.log('a user connnted');
+
+    console.log('======== Connection ========');
 
     /**
      * Join the room
@@ -62,7 +64,8 @@ module.exports = function (http) {
      *  - data: { room: 1 }
      */
     socket.on(Join_Room, data => {
-      console.log('joined user');
+      console.log('======= Join room =========');
+      console.log('joined user to room: ', data.room);
 
       // join the room
       room = data.room;
@@ -85,7 +88,8 @@ module.exports = function (http) {
      *  - data: { room: 1 }
      */
     socket.on(Leave_Room, data => {
-      console.log('Leaved room');
+      console.log('======== Leaved room ========');
+      console.log('Leaved room: ', data.room);
 
       // Delete chat document and relation table    
       Chat.deleteChatByRid(data.room, err => {
@@ -115,7 +119,8 @@ module.exports = function (http) {
      *   - data: {from: 'FromAlias', to: 'ToAlias', message: 'messages'}  
      */
     socket.on(Send_Message, data => {
-      console.log(data);
+      console.log('======== send message ========');
+      console.log(data, room);
 
       client.get(room, (err, count) => {
         if (err) {
@@ -172,6 +177,8 @@ module.exports = function (http) {
     });
 
     socket.on('disconnect', () => {
+      console.log('======== disconnect =======');
+      console.log('Before delete rooms:', rooms);
       if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
         for (let i = rooms[room].length - 1; i >= 0; i--) {
           if (rooms[room][i] == socket.id) {
@@ -184,7 +191,8 @@ module.exports = function (http) {
           }
         }
       }
-      console.log('disconnected');
+      console.log('After delete rooms: ', rooms);
+      console.log('======= disconnected ========', room);
     });
 
   });
