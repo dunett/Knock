@@ -39,6 +39,7 @@ const saveChatMessage = (arg) => {
 
 module.exports = function (http) {
   var io = socketio(http);
+  //var io = socketio(http, { pingTimeout: 60000 });
 
   // set socket.io-redis
   io.adapter(redis({
@@ -172,19 +173,19 @@ module.exports = function (http) {
     });
 
     socket.on('disconnect', () => {
-      if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
-        for (let i = rooms[room].length - 1; i >= 0; i--) {
-          if (rooms[room][i] == socket.id) {
-            // delete socket.id
-            rooms[room].splice(i, 1);
+      // if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
+      //   for (let i = rooms[room].length - 1; i >= 0; i--) {
+      //     if (rooms[room][i] == socket.id) {
+      //       // delete socket.id
+      //       rooms[room].splice(i, 1);
 
-            // decrement cliet count in redis
-            client.decr(room);
-            break;
-          }
-        }
-      }
-      console.log('disconnected');
+      //       // decrement cliet count in redis
+      //       client.decr(room);
+      //       break;
+      //     }
+      //   }
+      // }
+      console.log('disconnected ', room);
     });
 
   });
