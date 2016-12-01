@@ -49,13 +49,14 @@ module.exports = function (http) {
 
   // // initialize all key in redis
   client.flushdb((err, succeeded) => {
-    console.log(succeeded);
+    console.log('Redis flush: ', succeeded);
   });
 
   io.on('connection', socket => {
     // room id
     let room = '';
-    console.log('a user connnted');
+
+    console.log('======== Connection ========');
 
     /**
      * Join the room
@@ -63,7 +64,8 @@ module.exports = function (http) {
      *  - data: { room: 1 }
      */
     socket.on(Join_Room, data => {
-      console.log('joined user');
+      console.log('======= Join room =========');
+      console.log('joined user to room: ', data.room);
 
       // join the room
       room = data.room;
@@ -86,7 +88,8 @@ module.exports = function (http) {
      *  - data: { room: 1 }
      */
     socket.on(Leave_Room, data => {
-      console.log('Leaved room');
+      console.log('======== Leaved room ========');
+      console.log('Leaved room: ', data.room);
 
       // Delete chat document and relation table    
       Chat.deleteChatByRid(data.room, err => {
@@ -174,20 +177,20 @@ module.exports = function (http) {
     });
 
     socket.on('disconnect', () => {
-       console.log('======== disconnect =======');
-       console.log('Before delete rooms:', rooms);
-       if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
-         for (let i = rooms[room].length - 1; i >= 0; i--) {
-           if (rooms[room][i] == socket.id) {
-             // delete socket.id
-             rooms[room].splice(i, 1);
+      console.log('======== disconnect =======');
+      console.log('Before delete rooms:', rooms);
+      if (room != undefined && rooms[room] != undefined && rooms[room].length > 0) {
+        for (let i = rooms[room].length - 1; i >= 0; i--) {
+          if (rooms[room][i] == socket.id) {
+            // delete socket.id
+            rooms[room].splice(i, 1);
 
-             // decrement cliet count in redis
-             client.decr(room);
-             break;
-           }
-         }
-       }
+            // decrement cliet count in redis
+            client.decr(room);
+            break;
+          }
+        }
+      }
       console.log('After delete rooms: ', rooms);
       console.log('======= disconnected ========', room);
     });
