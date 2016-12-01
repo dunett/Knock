@@ -121,7 +121,10 @@ router.get('/chat/list/:u_id', (req, res, next) => {
 
 /**
  * 대화 내용
- * GET /chat/:r_id
+ * GET /chat/:r_id/:alias
+ * Params:
+ *   - r_id: relation id
+ *   - alias: own alias
  */
 router.get('/chat/:r_id/:alias', (req, res, next) => {
   // validate params
