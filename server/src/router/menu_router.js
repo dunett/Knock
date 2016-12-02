@@ -25,6 +25,17 @@ router.route('/QNA')
     .get(showQuestion)
     .post(upload.single(), addAnswer);
 
+router.route('/analysis')
+    .get(showAnalysis);
+
+router.route('/alarm/:u_id')
+    .get(showAlarm)
+    .put(upload.single(), chgAlarm);
+
+router.route('/block')
+    .get(showReport)
+    .post(upload.single(), blockUser);
+
 module.exports = router;
 
 // 공지보기
@@ -131,5 +142,79 @@ function addAnswer(req, res, next){
             return next(err);
         }
         res.redirect('./addAnswer.html');
+    })
+}
+
+// 유저통계
+function showAnalysis(req, res, next){
+    Menu.showAnalysis((err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+// 알림설정보기
+function showAlarm(req, res, next){
+    const id = req.params.u_id;
+    Menu.showAlarm(id, (err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+// 알림설정수정
+function chgAlarm(req, res, next){
+    const id = req.params.u_id;
+    const alarm1 = req.body.alarm1;
+    const alarm2 = req.body.alarm2;
+    const alarm3 = req.body.alarm3;
+    if(alarm1 != undefined){
+        var info = {
+            alarm1 : alarm1
+        };
+    }
+    if(alarm2 != undefined){
+        var info = {
+            alarm2 : alarm2
+        };
+    }
+    if(alarm3 != undefined){
+        var info = {
+            alarm3 : alarm3
+        };
+    }
+    Menu.chgAlarm(info, id, (err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+// 신고내용보기
+function showReport(req, res, next){
+    Menu.showReport((err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+// 유저블럭
+function blockUser(req, res, next){
+    const rid = req.body.rid;
+    const uid = req.body.uid;
+    const block = req.body.block;
+    
+    Menu.blockUser(rid, uid, block, (err, results) =>{
+        if(err){
+            return next(err);
+        }
+        res.redirect('./blockUser.html');
     })
 }
