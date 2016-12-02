@@ -16,7 +16,7 @@ const Chat = mongoose.Schema({
       check: Boolean
     }
   ]
-});
+}, { versionKey: false });
 
 /**
  * Save chat message to mongodb
@@ -26,27 +26,34 @@ const Chat = mongoose.Schema({
  *    - from: sender nickname
  *    - to: receiver nickname
  *    - message: text
- *    - check: read or unread
  */
 Chat.statics.saveChatMessage = function saveChatMessage(arg, callback) {
   this.findOne({ r_id: arg.r_id }, (err, chat) => {
-    if (err) return callback(err);
-    if (!chat) return callback(new Error('Chat not found'));
+    if (err) {
+      return callback(err);
+    }
+
+    if (!chat) {
+      return callback(new Error('Chat not found'));
+    }
 
     const now = new Date();
 
-    chat.messages.unshift({
+    //chat.messages.unshift({
+    const lastIndex = chat.messages.push({
       from: arg.from,
       to: arg.to,
       message: arg.message,
       date: new Date(now.getTime() + Timezon_Kor),
-      check: arg.check || false
+      check: false
     });
 
     chat.save(err => {
-      if (err) return callback(err);
+      if (err) {
+        return callback(err);
+      }
 
-      return callback(null, { msg: 'Success' });
+      return callback(null, { message_id: chat.messages[lastIndex - 1]._id });
     });
   });
 };
@@ -210,6 +217,79 @@ Chat.statics.deleteChatByRid = function deleteChatByRid(r_id, callback) {
 
     return callback(null);
   });
+};
+
+let test_index = 1;
+let test_index2 = 1;
+
+/**
+ * 메시지를 읽은 상태로 변경한다
+ * Params:
+ *  - r_id: room id
+ *  - message_id: message object id
+ */
+Chat.statics.changeMessageCheckToRead = function changeMessageCheckToRead(r_id, message_id, callback) {
+  this.findOne({ messages: { '$elemMatch': { _id: mongoose.Types.ObjectId(message_id) } } })
+    .exec((err, chat) => {
+      if (err) {
+        return callback(err);
+      }
+
+      if (!chat) {
+        return callback(new Error('Not found chat'));
+      }
+
+      const index = chat.messages.findIndex(m => m._id == message_id);
+
+      if (index < 0) {
+        return callback(new Error('Not found message'));
+      }
+
+      console.log(test_index++);
+
+      chat.messages[index].check = true;
+      chat.save(err => {
+        if (err) {
+          return callback(err);
+        }
+
+        return callback(null);
+      });
+    });
+
+  // this.findOne({ r_id: r_id })
+  //   .exec((err, chat) => {
+  //     if (err) {
+  //       return callback(err);
+  //     }
+
+  //     if (!chat) {
+  //       return callback(null, { msg: 'Not found chat' });
+  //     }
+
+  //     console.log(test_index++);
+
+  //     // If you did not check the message from the other party, change it to read.
+  //     for (let message of chat.messages) {
+  //       if (message._id == message_id) {
+  //         message.check = true;
+  //         console.log(test_index2++);
+  //         break;
+  //       }
+  //     }
+
+  //     chat.save(err => {
+  //       if (err) {
+  //         //return callback(null, chat);
+  //         return callback(err);
+  //       }
+
+  //       let result = {};
+  //       result.msg = 'Success';
+
+  //       return callback(null, result);
+  //     });
+  //   });
 };
 
 module.exports = mongoose.model('Chat', Chat);

@@ -8,6 +8,7 @@ const Relation = require('../model/relation');
 
 // Constant variables
 const Send_Message = 'sendMessage';
+const Receive_Message = 'receiveMessage';
 const Join_Room = 'joinRoom';
 const Leave_Room = 'leaveRoom';
 
@@ -16,7 +17,12 @@ const redisInfo = {
   port: process.env.REDIS_PORT,
 };
 
+// set the ping time out of socket.io to 30sec 
+const PingTimeOut = 1000 * 30;
+
 let rooms = [];
+
+let test_index = 1;
 
 const client = require('redis').createClient();
 
@@ -32,14 +38,14 @@ const saveChatMessage = (arg) => {
         return reject(err);
       }
 
-      resolve();
+      resolve(result);
     });
   });
 };
 
 module.exports = function (http) {
-  var io = socketio(http);
-  //var io = socketio(http, { pingTimeout: 60000 });
+  //var io = socketio(http);
+  var io = socketio(http, { pingTimeout: PingTimeOut });
 
   // set socket.io-redis
   io.adapter(redis({
@@ -141,10 +147,7 @@ module.exports = function (http) {
         };
 
         if (count == 1) {
-          // if it is not live chat , save the message as unread
-          param.check = false;
-
-          saveChatMessage(param).then(() => {
+          saveChatMessage(param).then(result => {
             // TODO: push notification
             // Send push notification when there is only one person in chat room
             console.log('======== PUSH NOTIFICATION ========');
@@ -157,11 +160,12 @@ module.exports = function (http) {
           });
 
         } else {
-          // If it is live chat, save the message as read
-          param.check = true;
+          saveChatMessage(param).then(result => {
+            //console.log(test_index++);
 
-          saveChatMessage(param).then(() => {
             // Live chat
+            data.message_id = result.message_id;
+
             const msg = JSON.stringify(data);
             //io.in(room).emit(Send_Message, msg);          // include sender
             socket.to(room).emit(Send_Message, msg);        // except  sender
@@ -172,6 +176,21 @@ module.exports = function (http) {
               return;
             }
           });
+        }
+      });
+    });
+
+    /**
+     * When user receive message, change the message to read
+     */
+    socket.on(Receive_Message, data => {
+      console.log('======== receive message ========');
+      console.log(data, room);
+
+      Chat.changeMessageCheckToRead(data.room, data.message_id, (err, result) => {
+        if (err) {
+          console.error(err);
+          return;
         }
       });
     });

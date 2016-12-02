@@ -101,7 +101,11 @@
         });
 
         socket.on('sendMessage', function(msg){
+            var r_id = $('#room').val();  
+            var message = JSON.parse(msg);
+
             $('#messages').append($('<li>').text(msg));
+            socket.emit('receiveMessage', {room: r_id, message_id: message.message_id});
         });        
 
         socket.on('leaveRoom', function(msg) {
