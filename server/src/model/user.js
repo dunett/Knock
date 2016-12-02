@@ -1,4 +1,5 @@
 var pool = require('./dbConnection');
+const gender = require('../utils/constants').gender;
 
 const Quiz_Limit_Count = 7;
 
@@ -79,7 +80,7 @@ User.addUser = (user, callback) => {
 };
 
 /**
- * Get Alias and thumbnail of multi user
+ * Get Alias and thumbnail(type icon) of multi user
  * Params:
  *  - u_ids: [{r_id: 1, u_id: 2}, ...]
  * Return:
@@ -91,16 +92,36 @@ User.getAliasAndThumbnailByUid = (u_ids, callback) => {
       return callback(err);
     }
 
-    const sql = 'SELECT u_id, alias, thumbnail FROM User WHERE u_id IN (?)';
+    const sql = 'SELECT u_id, alias, thumbnail_image, thumbnail_image_woman, gender FROM User as U, Characters as C WHERE U.c_id = C.c_id AND u_id IN (?)';
     conn.query(sql, [u_ids], (err, profiles) => {
       if (err) {
         conn.release();
         return callback(err);
       }
 
+      let result = [];
+      for (let profile of profiles) {
+        result.push({
+          u_id: profile.u_id,
+          alias: profile.alias,
+          thumbnail: (profile.gender == gender.man) ? profile.thumbnail_image : profile.thumbnail_image_woman,
+        });
+      }
+
       conn.release();
-      return callback(null, profiles);
+      return callback(null, result);
     });
+
+    // const sql = 'SELECT u_id, alias, thumbnail FROM User WHERE u_id IN (?)';
+    // conn.query(sql, [u_ids], (err, profiles) => {
+    //   if (err) {
+    //     conn.release();
+    //     return callback(err);
+    //   }
+
+    //   conn.release();
+    //   return callback(null, profiles);
+    // });
   });
 };
 

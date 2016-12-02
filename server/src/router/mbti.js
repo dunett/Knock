@@ -99,6 +99,9 @@ router.get('/mbti/:u_id', (req, res, next) => {
   });
 });
 
+/**
+ * 유형 상세 보기
+ */
 router.get('/mbti/:u_id/detail', (req, res, next) => {
   // Validate params
   const u_id = parseInt(req.params.u_id);
