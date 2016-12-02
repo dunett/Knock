@@ -1,0 +1,45 @@
+<html>
+    <script language='javascript' type='text/javascript'>
+        window.onload= function(){
+            var request = new XMLHttpRequest();
+            
+            request.open('get', './block', true);
+
+            request.onreadystatechange = function(e){
+                if(request.readyState == 4){
+                    if(request.status == 200){
+                        var data = JSON.parse(request.responseText);
+                        //alert(data[0].question);
+                        var table = document.getElementById('table');
+                        var rows = "<tr><th width='20%'>신고대상</th><th>내용</th><th width='20%'>처리</th></tr>";
+                        for(var i=0; i<data.length; i++){
+                            rows = rows + "<tr><td id='per"+i+"'>"+data[i].alias+"</td><td id='cont"+i+"'>"+data[i].message+"</td><td style='text-align:center'><input type='button' onclick=update('"+data[i].r_id+"','"+data[i].sender+"',1) value='승인'><input type='button' onclick=update('"+data[i].r_id+"','"+data[i].sender+"',0) value='거부'></td></tr>";    
+                        }
+                        table.innerHTML = rows;
+                    }
+                }
+            }
+            request.send();
+        }
+
+        function update(id, send, check){
+            var rid = document.getElementById('rid');
+            var uid = document.getElementById('uid');
+            var block = document.getElementById('block');
+            rid.value = id;
+            uid.value = send;
+            block.value = check;
+            var form = document.getElementById('t1');
+            form.submit();
+        }
+    </script>
+    <body>
+        <table width="600px" height="100px" id="table" border="1">
+        </table>
+        <form method='post' enctype="multipart/form-data"  action='../block' id="t1">
+        <input type="hidden" name="rid" id="rid">
+        <input type="hidden" name="uid" id="uid">
+        <input type="hidden" name="block" id="block">
+        </form>
+    </body>
+</html>

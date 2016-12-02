@@ -13,7 +13,7 @@ rule.hour = 16;
 // //rule.minute = 20;
 
 schedule.scheduleJob(rule, function(){
-    refresh();
+    TKnock();
     console.log('매 5시 마다 실행 ', new Date());
 });
 
@@ -114,7 +114,7 @@ function selection(id, conn){
     );
 }
 
-function refresh(){
+function TKnock(){
     pool.getConnection(function (err, conn){
         const sql = "SELECT u_id FROM User WHERE status = 1";
         conn.query(sql, (err, results) =>{

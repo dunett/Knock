@@ -1,0 +1,74 @@
+<html>
+    <script language='javascript' type='text/javascript'>
+        window.onload= function(){
+            var request = new XMLHttpRequest();
+            
+            request.open('get', './analysis', true);
+
+            request.onreadystatechange = function(e){
+                if(request.readyState == 4){
+                    if(request.status == 200){
+                        var data = JSON.parse(request.responseText);
+                        //alert(data[0].type);
+                        var total = 0;
+                        for(var i=0; i<data.length; i++){
+                            var type = document.getElementById('type'+i);
+                            type.innerHTML = data[i].type;
+                            var count = document.getElementById('count'+i);
+                            count.innerHTML = data[i].count;
+                            total = total + data[i].count;
+                        }
+                        for(var i=0; i<data.length; i++){
+                            var per = document.getElementById('per'+i);
+                            per.innerHTML = ((data[i].count/total)*100).toFixed(2)+"%";
+                        }
+                    }
+                }
+            }
+            request.send();
+        }
+    </script>
+    <body>
+        <table height="100px" border="1">
+            <tr>
+                <th>유형</th>
+                <td id="type0"></td>
+                <td id="type1"></td>
+                <td id="type2"></td>
+                <td id="type3"></td>
+                <td id="type4"></td>
+                <td id="type5"></td>
+                <td id="type6"></td>
+                <td id="type7"></td>
+                <td id="type8"></td>
+                <td id="type9"></td>
+            </tr>
+            <tr>
+                <th>인원</th>
+                <td id="count0"></td>
+                <td id="count1"></td>
+                <td id="count2"></td>
+                <td id="count3"></td>
+                <td id="count4"></td>
+                <td id="count5"></td>
+                <td id="count6"></td>
+                <td id="count7"></td>
+                <td id="count8"></td>
+                <td id="count9"></td>
+            </tr>
+            <tr>
+                <th>비율</th>
+                <td id="per0"></td>
+                <td id="per1"></td>
+                <td id="per2"></td>
+                <td id="per3"></td>
+                <td id="per4"></td>
+                <td id="per5"></td>
+                <td id="per6"></td>
+                <td id="per7"></td>
+                <td id="per8"></td>
+                <td id="per9"></td>
+            </tr>
+        </table>
+    </body>
+</html>
