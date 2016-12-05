@@ -60,7 +60,7 @@ User.isExistedUser = (u_id, callback) => {
 /**
  * Add new user to database
  * Params:
- *  - user: email, alias, gender, area, age, job, faith, hobby
+ *  - user: email, alias, gender, area, age, job, faith, hobby, sns_token, fcm_token
  */
 User.addUser = (user, callback) => {
   pool.getConnection((err, conn) => {
@@ -300,26 +300,26 @@ User.leaveAccount = (u_id, callback) => {
 /**
  * Get push token
  */
-User.getTokenByAlias = (alias, callback) => {
+User.getFCMTokenByAlias = (alias, callback) => {
   pool.getConnection((err, conn) => {
     if(err) {
       return callback(err);
     }
 
-    const sql = 'SELECT cookie FROM User WHERE alias = ?';
-    conn.query(sql, [alias], (err, cookies) => {
+    const sql = 'SELECT fcm_token FROM User WHERE alias = ?';
+    conn.query(sql, [alias], (err, tokesn) => {
       if(err){
         conn.release();
         return callback(err);
       }
 
-      if(cookies.length === 0) {
+      if(tokesn.length === 0) {
         conn.release();
-        return callback(new Error('Not found cookie'));
+        return callback(new Error('Not found token'));
       }
 
       conn.release();
-      return callback(null, cookies[0]);
+      return callback(null, tokesn[0]);
     });
   });
 };

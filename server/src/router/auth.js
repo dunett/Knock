@@ -31,15 +31,19 @@ router.post('/join', multer.single(), (req, res, next) => {
   const fit = req.body.fit;
   const hobby = req.body.hobby;
 
+  // token
+  const sns_token = req.body.sns_token;
+  const fcm_token = req.body.fcm_token;
+
   // validate necessary field
   if (!email || !alias || !gender || !age || !age_min || !age_max) {
     return next(new Error('Not correct body message'));
   }
 
   // email regex
-  if (!validate.validateEmail(email)) {
-    return next(new Error('Invalid email format'));
-  }
+  // if (!validate.validateEmail(email)) {
+  //   return next(new Error('Invalid email format'));
+  // }
 
   // gender regex
   if (!validate.validateGender(gender)) {
@@ -61,7 +65,7 @@ router.post('/join', multer.single(), (req, res, next) => {
       return next(new Error('Duplicated'));
     }
 
-    User.addUser({ email, alias, gender, age, age_min, age_max, job, school, faith, fit, hobby }, (err, result) => {
+    User.addUser({ email, alias, gender, age, age_min, age_max, job, school, faith, fit, hobby, sns_token, fcm_token }, (err, result) => {
       if (err) {
         return next(err);
       }

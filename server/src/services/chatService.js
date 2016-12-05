@@ -154,7 +154,7 @@ module.exports = function (http) {
             // TODO: push notification
             // Send push notification when there is only one person in chat room
             console.log('======== PUSH NOTIFICATION ========');
-            User.getTokenByAlias(param.to, (err, token) => {
+            User.getFCMTokenByAlias(param.to, (err, token) => {
               if(err) {
                 console.error(err);
                 return;
