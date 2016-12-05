@@ -1,3 +1,4 @@
+var async = require('async');
 const pool = require('./dbConnection');
 
 class Menu{
@@ -153,7 +154,7 @@ Menu.showReport = function(cb){
 }
 
 Menu.blockUser = function(rid, uid, check, cb){
-    console.log(check);
+    //console.log(check);
     if(check==1){
         pool.getConnection(function(err, conn){
         const sql = 'UPDATE User SET status = 2 WHERE u_id = ?';
@@ -192,6 +193,82 @@ Menu.blockUser = function(rid, uid, check, cb){
         })
     }
     
+}
+
+Menu.showNew = function(id, cb){
+    pool.getConnection(function(err,conn){
+        async.series(
+            [
+                function task1(done) {
+                    const sql = 'SELECT count(*) as count FROM Relation WHERE (sender = ? AND relation = 1 AND see = 1) OR (receiver = ? AND relation = 1 AND see = 1) OR (relation = 0 AND receiver = ? AND see = 1)';
+                        conn.query(sql, [id, id, id], function(err, result){
+                            if(err){
+                                return done(err);
+                            }
+                            if(result[0].count > 0){
+                                //New
+                                return done(null, {right: 1});
+                            }else{
+                                return done(null, {right: 0});
+                            }
+                        })
+                },
+                function task2(done) {
+                    const sql = 'SELECT count(*) as count FROM Destiny WHERE sender = ? AND see = 1';
+                        conn.query(sql, id, (err, result)=>{
+                            if(err){
+                                return done(err);
+                            }
+                            if(result[0].count > 0){
+                                //New
+                                return done(null, {left: 1});
+                            }else{
+                                return done(null, {left: 0});
+                            }
+                        })
+                }
+            ],
+            function(err, results){
+               if(err){
+                    return cb(err, err.message);
+                }
+                conn.release();
+                return cb(null, {new: results);
+            }
+        );
+    });
+}
+
+Menu.leftClear = function(id, cb){
+    pool.getConnection(function(err, conn){
+        const sql = 'UPDATE Destiny SET see = 0, s_date = now() WHERE see = 1 AND sender = ?';
+        conn.query(sql, id, function(err, result){
+            if(err){
+                err.code = 500;
+                conn.release();
+                return cb(err, {msg: 'Failure'});
+            }
+            conn.commit();
+            conn.release();
+            return cb(null, {msg : "Success"});
+        })
+    })
+}    
+
+Menu.rightClear = function(id, cb){
+    pool.getConnection(function(err, conn){
+        const dql = 'UPDATE Relation SET see = 0, s_date = now() WHERE r_id = ?';
+        conn.query(sql, id, function(err, result){
+            if(err){
+                err.code = 500;
+                conn.release();
+                return cb(err, {msg: 'Failure'});
+            }
+            conn.commit();
+            conn.release();
+            return cb(null, {msg : "Success"});
+        })
+    })
 }
 
 module.exports = Menu;

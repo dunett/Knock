@@ -23,7 +23,7 @@ Knock.addRel = function(info, cb){
 // 관계연결하기
 Knock.chgRel = function(id, cb){
     pool.getConnection(function (err, conn){
-        var sql = "UPDATE Relation SET relation = 1 where r_id = ?";
+        var sql = "UPDATE Relation SET relation = 1, see = 1 where r_id = ?";
         conn.query(sql, id, function(err, results){
             if(err){
                 //err.code = 500;

@@ -59,7 +59,7 @@ History.eachHistory = function(id, cb){
         if(err){
             console.log(err);
         }
-        const sql = 'SELECT u.u_id, u.age, u.alias, u.thumbnail, r.favor_r as favor FROM User u, Relation r WHERE u.u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1) AND u.u_id = r.receiver union  SELECT u.u_id, u.age, u.alias, u.thumbnail, r.favor_s as favor FROM User u, Relation r WHERE u.u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 1) AND u.u_id = r.sender;';
+        const sql = 'SELECT u_id, age, alias, thumbnail, favor_r as favor, see FROM User u, Relation r WHERE u.u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1) AND u.u_id = r.receiver union  SELECT u_id, age, alias, thumbnail, favor_s as favor, see FROM User u, Relation r WHERE u.u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 1) AND u.u_id = r.sender;';
         conn.query(sql, [id, id], (err, results) =>{
             var three;
             const cnt = results.length;
@@ -77,7 +77,7 @@ History.eachHistory = function(id, cb){
 History.meHistory = function(id, cb){
     pool.getConnection(function(err, conn){
         //const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0)';
-        const sql = 'SELECT u_id, age, alias, thumbnail FROM User u, Relation r WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0 order by date desc) and u.u_id = r.sender order by r.date desc'
+        const sql = 'SELECT u_id, age, alias, thumbnail, see FROM User u, Relation r WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0 order by date desc) and u.u_id = r.sender order by r.date desc'
         conn.query(sql, id, (err, results) =>{
             var three = "[{";
             const cnt = results.length;
@@ -94,7 +94,8 @@ History.meHistory = function(id, cb){
 //너에게 노크한 사람
 History.youHistory = function(id, cb){
     pool.getConnection(function(err, conn){
-        const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM Relation WHERE sender = 1 AND relation = 0)';
+        //const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM Relation WHERE sender = 1 AND relation = 0)';
+        const sql = 'SELECT u_id, age, alias, thumbnail, see FROM User u, Relation r WHERE u_id in (SELECT sender FROM Relation WHERE sender = ? AND relation = 0 order by date desc) and u.u_id = r.sender order by r.date desc'
         conn.query(sql, id, (err, results) =>{
             const cnt = results.length;
             if(cnt == 0){

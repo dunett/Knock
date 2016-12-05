@@ -36,6 +36,15 @@ router.route('/block')
     .get(showReport)
     .post(upload.single(), blockUser);
 
+router.route('/new/:u_id')
+    .get(showNew);
+
+router.route('/clear/left/:u_id')
+    .get(leftClear);
+
+router.route('/clear/right/:r_id')
+    .get(rightClear);
+
 module.exports = router;
 
 // 공지보기
@@ -216,5 +225,35 @@ function blockUser(req, res, next){
             return next(err);
         }
         res.redirect('./blockUser.html');
+    })
+}
+
+function showNew(req, res, next){
+    const id = req.params.u_id;
+    Menu.showNew(id, (err, results)=>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+function leftClear(req, res, next){
+    const id = req.params.u_id;
+    Menu.leftClear(id, (err, results)=>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
+    })
+}
+
+function rightClear(req, res, next){
+    const id = req.params.r_id;
+    Menu.rightClear(id, (err, results)=>{
+        if(err){
+            return next(err);
+        }
+        res.send(results);
     })
 }
