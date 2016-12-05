@@ -5,6 +5,9 @@ const redis = require('socket.io-redis');
 
 const Chat = require('../model/chat');
 const Relation = require('../model/relation');
+const User = require('../model/user');
+
+const fcm = require('../utils/fcm');
 
 // Constant variables
 const Send_Message = 'sendMessage';
@@ -151,6 +154,30 @@ module.exports = function (http) {
             // TODO: push notification
             // Send push notification when there is only one person in chat room
             console.log('======== PUSH NOTIFICATION ========');
+            User.getTokenByAlias(param.to, (err, token) => {
+              if(err) {
+                console.error(err);
+                return;
+              }        
+
+              const message = {
+                registration_ids: [token],
+                notification: {
+                  title: 'title',
+                  text: 'text',
+                  //icon: ''
+                }
+              };
+
+              fcm.send(message, (err, results) => {
+                if(err) {
+                  console.error(err);
+                  return;                                  
+                }
+
+                console.log('FCM success: ', results);
+              });
+            });
           }).catch(err => {
             if (err) {
               console.error('saveChatMessage error:', err.stack);

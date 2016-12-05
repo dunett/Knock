@@ -34,7 +34,7 @@ const uploadFile = (args) => {
     fileStream.on('open', () => {
       const params = {
         Bucket: bucketName,
-        Key: profileFolderName + args.name,
+        Key: profileFolderName + '/' + args.name,
         Body: fileStream,
         ACL: 'public-read',
         ContentType: args.contentType,
@@ -66,7 +66,7 @@ const deleteFile = (args) => {
 
     const params = {
       Bucket: bucketName,
-      Key: profileFolderName + args.name,
+      Key: profileFolderName + '/' + args.name,
     };
 
     s3.deleteObject(params, err => {

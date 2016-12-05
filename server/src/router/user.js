@@ -10,9 +10,7 @@ const gm = require('gm').subClass({ imageMagick: true });
 const path = require('path');
 
 const aws = require('../utils/aws');
-
-const Thumbnail_Width = 200;
-const Thumbnail_Height = 200;
+const thumbnailSize = require('../utils/constants').thumbnailSize;
 
 /**
  * 프로필 보기
@@ -181,7 +179,7 @@ const makeThumbnail = (profile, callback) => {
   const dst = path.join(profile.destination, thumbnailName);
 
   gm(src)
-    .resize(Thumbnail_Width, Thumbnail_Height)       // keep the ratio 
+    .resize(thumbnailSize.width, thumbnailSize.height)       // keep the ratio 
     //.resizeExact(200, 200)
     .write(dst, err => {
       if (err) {

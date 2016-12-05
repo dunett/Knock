@@ -5,8 +5,14 @@ module.exports.gender = {
 
 module.exports.aws = {
   bucketName: 'tacademy-knock',
-  profileFolderName: 'profile/',
+  profileFolderName: 'profile',
   manFolderName: 'image/man_icn',
   womanFolderName: 'image/woman_icn',
   homeFolderName: 'home',
+  thumbnailFolderName: 'thumbnail',
+};
+
+module.exports.thumbnailSize = {
+  width: 200,
+  height: 200
 };
