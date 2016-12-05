@@ -1,0 +1,98 @@
+﻿#select * from Feature;
+#delete from Feature;
+#ALTER TABLE Feature AUTO_INCREMENT = 1;
+#select * from Feature where c_id = 1;
+#select * from Characters;
+
+use Knock;
+
+/* 1. 런던에서 온 시인 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '상상력', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EC%83%81%EB%A0%A5.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '다정한 칭찬', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%8B%A4%EC%A0%95%ED%95%9C%EC%B9%AD%EC%B0%AC.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '감사의 표현', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%90%EC%82%AC%EC%9D%98%ED%91%9C%ED%98%84.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '공상', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EC%83%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '온화한 말투', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%98%A8%ED%99%94%ED%95%9C%EB%A7%90%ED%88%AC.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '가능성', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%80%EB%8A%A5%EC%84%B1.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(1, '인정해주는 말', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%9D%B8%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94%EB%A7%90.png');
+
+
+/* 2. 파리에 사는 사진가 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '실질적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A7%88%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '다정한 칭찬', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%8B%A4%EC%A0%95%ED%95%9C%EC%B9%AD%EC%B0%AC.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '확실함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%99%95%EC%8B%A4%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '계획적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%84%ED%9A%8D%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '인정해주는 말', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%9D%B8%EC%A0%95%ED%95%B4%EC%A3%BC%EB%8A%94%EB%A7%90.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '감사의 표현', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%90%EC%82%AC%EC%9D%98%ED%91%9C%ED%98%84.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(2, '온화한 말투', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%98%A8%ED%99%94%ED%95%9C%EB%A7%90%ED%88%AC.png');
+
+/* 3. 아이슬란드의 요리사 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '상상력', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EC%83%81%EB%A0%A5.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '진정한 대화', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%A7%84%EC%A0%95%ED%95%9C%EB%8C%80%ED%99%94.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '공상', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EC%83%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '상대에 대한 집중', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EB%8C%80%EC%97%90%EB%8C%80%ED%95%9C%EC%A7%91%EC%A4%91.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '가능성', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%80%EB%8A%A5%EC%84%B1.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '공감', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EA%B0%90.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(3, '함께하는 활동', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%95%A8%EA%BB%98%ED%95%98%EB%8A%94%ED%99%9C%EB%8F%99.png');
+
+/* 4. 로마의 바리스타 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '실질적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A7%88%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '진정한 대화', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%A7%84%EC%A0%95%ED%95%9C%EB%8C%80%ED%99%94.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '확실함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%99%95%EC%8B%A4%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '공감', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EA%B0%90.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '실제적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A0%9C%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '상대에 대한 집중', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EB%8C%80%EC%97%90%EB%8C%80%ED%95%9C%EC%A7%91%EC%A4%91.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(4, '함께하는 활동', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%95%A8%EA%BB%98%ED%95%98%EB%8A%94%ED%99%9C%EB%8F%99.png');
+
+/* 5. 우유니 사막의 소금장수 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '상상력', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EC%83%81%EB%A0%A5.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '눈으로 드러나는 관심', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%88%88%EC%9C%BC%EB%A1%9C%EB%93%9C%EB%9F%AC%EB%82%98%EB%8A%94%EA%B4%80%EC%8B%AC.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '공상', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EC%83%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '사소한 표현', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%82%AC%EC%86%8C%ED%95%9C%ED%91%9C%ED%98%84.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '가능성', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%80%EB%8A%A5%EC%84%B1.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '상대에게 도움이 되는 것', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EB%8C%80%EC%97%90%EA%B2%8C%EB%8F%84%EC%9B%80%EC%9D%B4%EB%90%98%EB%8A%94%EA%B2%83.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(5, '서프라이즈', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%84%9C%ED%94%84%EB%9D%BC%EC%9D%B4%EC%A6%88.png');
+
+/* 6. 요하네스버그의 세공사 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '실질적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A7%88%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '눈으로 드러나는 관심', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%88%88%EC%9C%BC%EB%A1%9C%EB%93%9C%EB%9F%AC%EB%82%98%EB%8A%94%EA%B4%80%EC%8B%AC.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '확실함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%99%95%EC%8B%A4%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '사소한 표현', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%82%AC%EC%86%8C%ED%95%9C%ED%91%9C%ED%98%84.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '이론적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%9D%B4%EB%A1%A0%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '상대에게 도움이 되는 것', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EB%8C%80%EC%97%90%EA%B2%8C%EB%8F%84%EC%9B%80%EC%9D%B4%EB%90%98%EB%8A%94%EA%B2%83.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(6, '서프라이즈', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%84%9C%ED%94%84%EB%9D%BC%EC%9D%B4%EC%A6%88.png');
+
+/* 7. 명왕성에서 온 집사 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '상상력', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EC%83%81%EB%A0%A5.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '묵묵한 헌신', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%AC%B5%EB%AC%B5%ED%95%9C%ED%97%8C%EC%8B%A0.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '공상', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EC%83%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '말보다 행동', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%A7%90%EB%B3%B4%EB%8B%A4%ED%96%89%EB%8F%99.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '가능성', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%80%EB%8A%A5%EC%84%B1.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '속 깊은 배려', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%86%8D%EA%B9%8A%EC%9D%80%EB%B0%B0%EB%A0%A4.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(7, '사소한 도움', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%82%AC%EC%86%8C%ED%95%9C%EB%8F%84%EC%9B%80.png');
+
+/* 8. 드레스덴의 가정교사 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '실질적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A7%88%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '묵묵한 헌신', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%AC%B5%EB%AC%B5%ED%95%9C%ED%97%8C%EC%8B%A0.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '말보다 행동', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%A7%90%EB%B3%B4%EB%8B%A4%ED%96%89%EB%8F%99.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '확실함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%99%95%EC%8B%A4%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '속 깊은 배려', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%86%8D%EA%B9%8A%EC%9D%80%EB%B0%B0%EB%A0%A4.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '사소한 도움', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%82%AC%EC%86%8C%ED%95%9C%EB%8F%84%EC%9B%80.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(8, '현실 추구', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%98%84%EC%8B%A4%EC%B6%94%EA%B5%AC.png');
+
+/* 9. 페루의 라마지기 */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '상상력', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%83%81%EC%83%81%EB%A0%A5.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '다정한 손길', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%8B%A4%EC%A0%95%ED%95%9C%EC%86%90%EA%B8%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '공상', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B3%B5%EC%83%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '따뜻함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%94%B0%EB%93%AF%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '가능성', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EA%B0%80%EB%8A%A5%EC%84%B1.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '추상적', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%B6%94%EC%83%81%EC%A0%81.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(9, '자상한 터치', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%9E%90%EC%83%81%ED%95%9C%ED%84%B0%EC%B9%98.png');
+
+/* 10. 피렌체의 가죽장인  */
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '실질적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A7%88%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '다정한 손길', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%8B%A4%EC%A0%95%ED%95%9C%EC%86%90%EA%B8%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '확실함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%99%95%EC%8B%A4%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '따뜻함', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EB%94%B0%EB%93%AF%ED%95%A8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '실제적인', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%8B%A4%EC%A0%9C%EC%A0%81%EC%9D%B8.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '자상한 터치', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%EC%9E%90%EC%83%81%ED%95%9C%ED%84%B0%EC%B9%98.png');
+INSERT INTO Feature(c_id, f_type, type_image) VALUES(10, '현실 추구', 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/feature/%ED%98%84%EC%8B%A4%EC%B6%94%EA%B5%AC.png');

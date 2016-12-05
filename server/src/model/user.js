@@ -1,5 +1,9 @@
 var pool = require('./dbConnection');
 
+const gender = require('../utils/constants').gender;
+const awsPath = require('../utils/constants').aws;
+const makeS3Path = require('../utils/aws.path').makeS3Path;
+
 const Quiz_Limit_Count = 7;
 
 const Status_Normal = 1;
@@ -79,7 +83,7 @@ User.addUser = (user, callback) => {
 };
 
 /**
- * Get Alias and thumbnail of multi user
+ * Get Alias and thumbnail(type icon) of multi user
  * Params:
  *  - u_ids: [{r_id: 1, u_id: 2}, ...]
  * Return:
@@ -91,16 +95,37 @@ User.getAliasAndThumbnailByUid = (u_ids, callback) => {
       return callback(err);
     }
 
-    const sql = 'SELECT u_id, alias, thumbnail FROM User WHERE u_id IN (?)';
+    const sql = 'SELECT u_id, alias, gender, image FROM User as U, Characters as C WHERE U.c_id = C.c_id AND u_id IN (?)';
     conn.query(sql, [u_ids], (err, profiles) => {
       if (err) {
         conn.release();
         return callback(err);
       }
 
+      let result = [];
+      for (let profile of profiles) {
+        result.push({
+          u_id: profile.u_id,
+          alias: profile.alias,
+          thumbnail: (profile.gender == gender.man) ?
+            makeS3Path(awsPath.thumbnailFolderName, gender.man, profile.image) : makeS3Path(awsPath.thumbnailFolderName, gender.woman, profile.image),
+        });
+      }
+
       conn.release();
-      return callback(null, profiles);
+      return callback(null, result);
     });
+
+    // const sql = 'SELECT u_id, alias, thumbnail FROM User WHERE u_id IN (?)';
+    // conn.query(sql, [u_ids], (err, profiles) => {
+    //   if (err) {
+    //     conn.release();
+    //     return callback(err);
+    //   }
+
+    //   conn.release();
+    //   return callback(null, profiles);
+    // });
   });
 };
 
@@ -116,7 +141,7 @@ User.getProfileByUid = (u_id, callback) => {
     }
 
     // 1. select user profile
-    const sql_profile = 'SELECT name, alias, age, area, thumbnail, profile, job, height, fit, faith, hobby, status, type from User as U, Characters as C WHERE U.c_id = C.c_id and U.u_id = ?';
+    const sql_profile = 'SELECT name, alias, age, area, thumbnail, profile, job, height, fit, faith, hobby, status, type, gender, image from User as U, Characters as C WHERE U.c_id = C.c_id and U.u_id = ?';
     conn.query(sql_profile, [u_id], (err, profiles) => {
       if (err) {
         conn.release();
@@ -140,6 +165,17 @@ User.getProfileByUid = (u_id, callback) => {
         const profile = profiles[0];
         profile.msg = 'Success';
         profile.quiz = rows;
+
+        // If profile and thumbnail are empty, show 성향 icon
+        if (profile.profile == '' && profile.thumbnail == '') {
+          profile.profile = (profile.gender == gender.man) ?
+            makeS3Path(awsPath.profileFolderName, gender.man, profile.image) : makeS3Path(awsPath.profileFolderName, gender.woman, profile.image);
+          profile.thumbnail = profile.profile;
+        }
+
+        // delete the gender, image properties
+        delete profile.gender;
+        delete profile.image;
 
         conn.release();
         return callback(null, profile);
@@ -257,6 +293,33 @@ User.leaveAccount = (u_id, callback) => {
 
       conn.release();
       return callback(null);
+    });
+  });
+};
+
+/**
+ * Get push token
+ */
+User.getTokenByAlias = (alias, callback) => {
+  pool.getConnection((err, conn) => {
+    if(err) {
+      return callback(err);
+    }
+
+    const sql = 'SELECT cookie FROM User WHERE alias = ?';
+    conn.query(sql, [alias], (err, cookies) => {
+      if(err){
+        conn.release();
+        return callback(err);
+      }
+
+      if(cookies.length === 0) {
+        conn.release();
+        return callback(new Error('Not found cookie'));
+      }
+
+      conn.release();
+      return callback(null, cookies[0]);
     });
   });
 };

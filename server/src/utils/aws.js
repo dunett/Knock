@@ -1,13 +1,14 @@
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const awsPath = require('./constants').aws;
 
 AWS.config.region = process.env.AWS_REGION;
 AWS.config.accessKeyId = process.env.AWS_ACCESS_KEY;
 AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
 
 // 버킷 이름
-const bucketName = 'tacademy-knock';
-const profileFolderName = 'profile/';
+const bucketName = awsPath.bucketName;
+const profileFolderName = awsPath.profileFolderName;
 
 const s3 = new AWS.S3();
 
@@ -33,7 +34,7 @@ const uploadFile = (args) => {
     fileStream.on('open', () => {
       const params = {
         Bucket: bucketName,
-        Key: profileFolderName + args.name,
+        Key: profileFolderName + '/' + args.name,
         Body: fileStream,
         ACL: 'public-read',
         ContentType: args.contentType,
@@ -65,7 +66,7 @@ const deleteFile = (args) => {
 
     const params = {
       Bucket: bucketName,
-      Key: profileFolderName + args.name,
+      Key: profileFolderName + '/' + args.name,
     };
 
     s3.deleteObject(params, err => {

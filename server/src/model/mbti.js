@@ -1,5 +1,9 @@
 const pool = require('./dbConnection');
 const async = require('async');
+const makeS3Path = require('../utils/aws.path').makeS3Path;
+const awsPath = require('../utils/constants').aws;
+
+const _gender = require('../utils/constants').gender;
 
 class Mbti {
 }
@@ -110,31 +114,37 @@ Mbti.getMyMbtiType = (u_id, callback) => {
     // 1. get c_id from User table
     // 2. get type, image from Characters table
     // 3. get feature from feature table
-    const sql = 'select type, image, f_type from Characters as C, Feature as F where C.c_id = F.c_id and C.c_id = (select c_id from User where u_id = ?)';
-    conn.query(sql, [u_id], (err, rows) => {
+    const sql_characters = 'SELECT type, image, gender FROM Characters as C, User as U WHERE C.c_id = U.c_id and u_id = ?';
+    conn.query(sql_characters, [u_id], (err, characters) => {
       if (err) {
         conn.release();
         return callback(err);
       }
 
-      let result = {};
-      if (rows.length > 0) {
-        result['msg'] = 'Success';
-        result['type'] = rows[0].type;
-        result['image'] = rows[0].image;
-
-        // make a feature array 
-        let feature = [];
-        for (let row of rows) {
-          feature.push(row['f_type']);
+      const sql_feature = 'SELECT type_image FROM Feature WHERE c_id = (SELECT c_id FROM User WHERE u_id = ?)';
+      conn.query(sql_feature, [u_id], (err, features) => {
+        if (err) {
+          conn.release();
+          return callback(err);
         }
 
-        const randomfeature = randomizeFeature(feature);
-        result['feature'] = randomfeature;
-      }
+        // make a feature array 
+        let featureArr = [];
+        for (let feature of features) {
+          featureArr.push(feature['type_image']);
+        }
 
-      conn.release();
-      return callback(null, result);
+        // combine query 1 and query 2
+        let result = {};
+        result.msg = 'Success';
+        result.type = characters[0].type;
+        result.image = (characters[0].gender == _gender.man) ?
+          makeS3Path(awsPath.homeFolderName, _gender.man, characters[0].image) : makeS3Path(awsPath.homeFolderName, _gender.woman, characters[0].image);
+        result.feature = featureArr;
+
+        conn.release();
+        return callback(null, result);
+      });
     });
   });
 };
@@ -152,7 +162,7 @@ Mbti.getDetailMbti = (u_id, callback) => {
         return callback(err);
       }
 
-      const sql_character = 'SELECT type, image, `explain` FROM Characters WHERE c_id = (SELECT c_id FROM User WHERE u_id = ?)';
+      const sql_character = 'SELECT type, image, `explain`, gender FROM Characters, User WHERE Characters.c_id = User.c_id and u_id = ?';
       conn.query(sql_character, [u_id], (err, characters) => {
         if (err) {
           conn.release();
@@ -166,7 +176,8 @@ Mbti.getDetailMbti = (u_id, callback) => {
         result.msg = 'Success';
 
         result.type = character.type;
-        result.image = character.image;
+        result.image = (character.gender == _gender.man) ?
+          makeS3Path(awsPath.homeFolderName, _gender.man, character.image) : makeS3Path(awsPath.homeFolderName, _gender.woman, character.image);
         result.explain = character.explain;
 
         const featuresStr = features.map(feature => {
@@ -209,7 +220,17 @@ Mbti.getOtherMbtiType = (u_id, callback) => {
           cb(null, characters, features);
         });
       },
-      function getOtherForOrder(characters, features, cb) {
+      function getGender(characters, features, cb) {
+        const sql_gender = 'SELECT gender FROM User WHERE u_id = ?';
+        conn.query(sql_gender, [u_id], (err, user) => {
+          if (err) {
+            return cb(err);
+          }
+
+          cb(null, characters, features, user[0].gender);
+        });
+      },
+      function getOtherForOrder(characters, features, gender, cb) {
         // 같은 타입, 비슷한 타입, 다른 타입 순서로 c_id를 구한다
         const sql_other = 'SELECT c_id AS id from User WHERE u_id = ? UNION SELECT id from Other WHERE c_id = (SELECT c_id from User WHERE u_id = ?)';
         conn.query(sql_other, [u_id, u_id], (err, others) => {
@@ -238,7 +259,8 @@ Mbti.getOtherMbtiType = (u_id, callback) => {
 
             result['data'].push({
               type: findedType.type,
-              image: findedType.image,
+              image: (gender == _gender.man) ?
+                makeS3Path(awsPath.homeFolderName, _gender.man, findedType.image) : makeS3Path(awsPath.homeFolderName, _gender.woman, findedType.image),
               explain: findedType.explain,
               feature: featuresStr,
             });
