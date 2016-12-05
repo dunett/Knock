@@ -233,7 +233,7 @@ Menu.showNew = function(id, cb){
                     return cb(err, err.message);
                 }
                 conn.release();
-                return cb(null, {new: results);
+                return cb(null, {new: results});
             }
         );
     });
