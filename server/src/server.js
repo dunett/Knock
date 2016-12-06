@@ -35,6 +35,7 @@ var http = require('http').Server(app);
 chatService(http);
 
 app.set('port', process.env.PORT || 3000);
+app.disable('x-powered-by');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -60,7 +61,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-    res.status(500).send({ mag: err.message });
+    res.status(500).send({ msg: err.message });
 });
 
 // http.listen(3000, function() {
@@ -70,3 +71,5 @@ app.use(function (err, req, res, next) {
 http.listen(app.get('port'), function () {
     console.log('server is listening ', app.get('port'));
 });
+
+module.exports = app;
