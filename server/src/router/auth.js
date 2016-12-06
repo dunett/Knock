@@ -65,12 +65,12 @@ router.post('/join', multer.single(), (req, res, next) => {
       return next(new Error('Duplicated'));
     }
 
-    User.addUser({ email, alias, gender, age, age_min, age_max, job, school, faith, fit, hobby, sns_token, fcm_token }, (err, result) => {
+    User.addUser({ email, alias, gender, age, age_min, age_max, job, school, faith, fit, hobby, sns_token, fcm_token }, (err, u_id) => {
       if (err) {
         return next(err);
       }
 
-      res.send({ msg: 'Success' });
+      res.send({ msg: 'Success', u_id });
     });
   });
 });

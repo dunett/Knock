@@ -77,7 +77,7 @@ User.addUser = (user, callback) => {
       }
 
       conn.release();
-      return callback(null, result);
+      return callback(null, result.insertId);
     });
   });
 };
@@ -302,24 +302,24 @@ User.leaveAccount = (u_id, callback) => {
  */
 User.getFCMTokenByAlias = (alias, callback) => {
   pool.getConnection((err, conn) => {
-    if(err) {
+    if (err) {
       return callback(err);
     }
 
     const sql = 'SELECT fcm_token FROM User WHERE alias = ?';
-    conn.query(sql, [alias], (err, tokesn) => {
-      if(err){
+    conn.query(sql, [alias], (err, tokens) => {
+      if (err) {
         conn.release();
         return callback(err);
       }
 
-      if(tokesn.length === 0) {
+      if (tokens.length === 0) {
         conn.release();
         return callback(new Error('Not found token'));
       }
 
       conn.release();
-      return callback(null, tokesn[0]);
+      return callback(null, tokens[0]);
     });
   });
 };
