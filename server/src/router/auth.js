@@ -95,4 +95,31 @@ router.get('/join/:alias', (req, res, next) => {
   });
 });
 
+/**
+ * 로그인
+ * POST /login  
+ */
+router.post('/login', multer.single(), (req, res, next) => {
+  // validate body message
+  if (!req.body) {
+    return next(new Error('Not correct body message'));
+  }
+
+  const email = req.body.email;
+  if (!email) {
+    return next(new Error('Not correct body message'));
+  }
+
+  User.login(email, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    return res.send({
+      msg: 'Success',
+      u_id: result.u_id,
+    });
+  });
+});
+
 module.exports = router;

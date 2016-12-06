@@ -324,4 +324,28 @@ User.getFCMTokenByAlias = (alias, callback) => {
   });
 };
 
+User.login = (email, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const sql = 'SELECT u_id FROM User WHERE email = ?';
+    conn.query(sql, [email], (err, u_ids) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      if (u_ids.length === 0) {
+        conn.release();
+        return callback(new Error('Not found user'));
+      }
+
+      conn.release();
+      return callback(null, u_ids[0]);
+    });
+  });
+};
+
 module.exports = User;
