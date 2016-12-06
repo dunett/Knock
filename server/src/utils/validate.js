@@ -22,6 +22,8 @@ function validateAgeMinMax(age_min, age_max) {
   return false;
 }
 
+// TODO: validate user alias
+
 module.exports = {
   validateEmail,
   validateGender,

@@ -37,7 +37,8 @@ router.put('/mbti/:u_id', multer.single(), (req, res, next) => {
   let answers = [];
   for (let property in req.body) {
     if (req.body[property] != Mbti.Char.Answer_Char && req.body[property] != Mbti.Char.Answer_Char2) {
-      return next(new Error('Not correct body message'));
+      const error = new Error('Not correct body message');
+      return next(error);
     }
 
     answers.push({

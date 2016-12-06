@@ -9,14 +9,12 @@ const multer = require('../utils/multerWrapper');
  * 상대 신고하기
  * POST /report/:r_id
  */
-router.post('/report/:r_id', multer.single(), (req, res, next) => {
-  // Validate params
-  const r_id = parseInt(req.params.r_id);
-  if (isNaN(r_id)) {
-    return next(new Error('Not correct request'));
+router.post('/report', multer.single(), (req, res, next) => {
+  // Validate body message
+  if (!req.body) {
+    return next(new Error('Not correct body message'));
   }
 
-  // Validate body message
   const senderStr = req.body.sender;
   const message = req.body.message;
   const sender = parseInt(senderStr);
@@ -26,7 +24,6 @@ router.post('/report/:r_id', multer.single(), (req, res, next) => {
   }
 
   Report.saveReport({
-    r_id,
     sender,
     message
   }, (err, result) => {

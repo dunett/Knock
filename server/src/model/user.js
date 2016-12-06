@@ -354,10 +354,26 @@ User.login = (email, callback) => {
 User.deleteTestUser = () => {
   pool.getConnection((err, conn) => {
     if (err) {
-      return ;
+      return;
     }
 
     const sql = 'DELETE FROM User WHERE email = "test@naver.com" AND alias = "tester"';
+    conn.query(sql, (err, result) => {
+      conn.release();
+    });
+  });
+};
+
+/**
+ * This is function for unit test 
+ */
+User.initialStatus = () => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return;
+    }
+
+    const sql = 'UPDATE User SET status = 1 WHERE u_id = 0';
     conn.query(sql, (err, result) => {
       conn.release();
     });

@@ -17,6 +17,10 @@ router.put('/relation/favor/:r_id', multer.single(), (req, res, next) => {
   }
 
   // validate body message
+  if (!req.body) {
+    return next(new Error('Not correct body message'));
+  }
+
   const u_idStr = req.body.u_id;
   const u_id = parseInt(u_idStr);
   if (isNaN(u_id)) {

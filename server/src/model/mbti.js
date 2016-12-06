@@ -409,7 +409,13 @@ function randomizeFeature(feature) {
 }
 
 module.exports = Mbti;
+
 module.exports.Char = {
   Answer_Char,
   Answer_Char2
+};
+
+module.exports.calculate = {
+  calculateMbti,
+  calculateLoveLanguage
 };

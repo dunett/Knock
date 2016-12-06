@@ -89,7 +89,10 @@ router.put('/user/:u_id', multer.single('profile'), (req, res, next) => {
       }
 
       // If profile is changed, remove old profile and thumbnail in S3
-      let profileName = path.basename(oldImage.profile);
+      let profileName = '';
+      if (oldImage.profile) {
+        profileName = path.basename(oldImage.profile);
+      }
       //let thumbnailName = path.basename(oldImage.thumbnail);
 
       // Return if there is no previous image 
