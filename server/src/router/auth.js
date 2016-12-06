@@ -36,9 +36,9 @@ router.post('/join', multer.single(), (req, res, next) => {
   const fcm_token = req.body.fcm_token;
 
   // validate necessary field
-  // if (!email || !alias || !gender || !age || !age_min || !age_max) {
-  //   return next(new Error('Not correct body message'));
-  // }
+  if (!email || !alias || !gender || !age || !age_min || !age_max) {
+    return next(new Error('Not correct body message'));
+  }
 
   // email regex
   // if (!validate.validateEmail(email)) {
@@ -46,14 +46,14 @@ router.post('/join', multer.single(), (req, res, next) => {
   // }
 
   // gender regex
-  // if (!validate.validateGender(gender)) {
-  //   return next(new Error('Invalid gender'));
-  // }
+  if (!validate.validateGender(gender)) {
+    return next(new Error('Invalid gender'));
+  }
 
   // // validate age
-  // if (!validate.validateAgeMinMax(age_min, age_max)) {
-  //   return next(new Error('Invalid age range'));
-  // }
+  if (!validate.validateAgeMinMax(age_min, age_max)) {
+    return next(new Error('Invalid age range'));
+  }
 
   // check alias exists
   User.isExistedAlias(alias, (err, result) => {
@@ -113,6 +113,12 @@ router.post('/login', multer.single(), (req, res, next) => {
   User.login(email, (err, result) => {
     if (err) {
       return next(err);
+    }
+
+    if (!result) {
+      return res.status(401).send({
+        msg: 'Not found user',
+      });
     }
 
     return res.send({

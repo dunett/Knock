@@ -339,11 +339,27 @@ User.login = (email, callback) => {
 
       if (u_ids.length === 0) {
         conn.release();
-        return callback(new Error('Not found user'));
+        return callback(null, null);
       }
 
       conn.release();
       return callback(null, u_ids[0]);
+    });
+  });
+};
+
+/**
+ * This is function for unit test 
+ */
+User.deleteTestUser = () => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return ;
+    }
+
+    const sql = 'DELETE FROM User WHERE email = "test@naver.com" AND alias = "tester"';
+    conn.query(sql, (err, result) => {
+      conn.release();
     });
   });
 };
