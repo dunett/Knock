@@ -171,6 +171,39 @@ router.put('/user/:u_id/black', (req, res, next) => {
   });
 });
 
+/**
+ * 토큰 변경하기
+ * PUT /user/:u_id/token
+ * Body: sns_token, fcm_token
+ */
+router.put('/user/:u_id/token', multer.single(), (req, res, next) => {
+  // validate params
+  const u_id = parseInt(req.params.u_id);
+  if (isNaN(u_id)) {
+    return next(new Error('Not correct request'));
+  }
+
+  // validate body message
+  if (!req.body) {
+    return next(new Error('Not correct body message'));
+  }
+
+  const sns_token = req.body.sns_token;
+  const fcm_token = req.body.fcm_token;
+
+  if (!sns_token && !fcm_token) {
+    return next(new Error('Not correct body message'));
+  }
+
+  User.editToken(u_id, sns_token, fcm_token, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.send({ msg: 'Success' });
+  });
+});
+
 const makeThumbnail = (profile, callback) => {
   // make a thumbnail
   if (!profile) {

@@ -71,6 +71,19 @@ describe('user router test success ', () => {
       });
   });
 
+  it('토큰 변경이 성공 했을 때 성공 메시지를 보낸다.', (done) => {
+    chai.request(server)
+      .put('/user/0/token')
+      .field('fcm_token', 'fcmaksdjflkjqwkejq')
+      .field('sns_token', 'snsqkejqwklcnzxklc')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.have.property('msg');
+        res.body.msg.should.equal('Success');
+        done();
+      });
+  });
+
   after(() => {
     // 계정 상태를 1로 돌린다.
     User.initialStatus();
@@ -85,6 +98,17 @@ describe('user router test fail', () => {
       .end((err, res) => {
         res.should.have.status(500);
         res.body.should.have.property('msg');
+        done();
+      });
+  });
+
+  it('토큰 변경 요청에 바디 메시지가 없으면 실패 메시지를 보낸다.', (done) => {
+    chai.request(server)
+      .put('/user/0/token')
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.should.have.property('msg');
+        res.body.msg.should.equal('Not correct body message');
         done();
       });
   });

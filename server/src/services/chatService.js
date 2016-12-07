@@ -46,6 +46,39 @@ const saveChatMessage = (arg) => {
   });
 };
 
+/**
+ * Send push message
+ * Params:
+ *  - to: Alias of other party
+ *  - from: my alias 
+ *  - message: message
+ */
+const pushMessage = (arg) => {
+  User.getFCMTokenByAlias(arg.to, (err, token) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    const message = {
+      to: token.fcm_token,
+      //collapse_key: param.r_id,
+      notification: {
+        title: arg.from,
+        text: arg.message,
+      },
+    };
+
+    fcm.send(message, (err, response) => {
+      if (err) {
+        console.error("Something has gone wrong!");
+      } else {
+        console.log("Successfully sent with response: ", response);
+      }
+    });
+  });
+};
+
 module.exports = function (http) {
   //var io = socketio(http);
   var io = socketio(http, { pingTimeout: PingTimeOut });
@@ -151,33 +184,9 @@ module.exports = function (http) {
 
         if (count == 1) {
           saveChatMessage(param).then(result => {
-            // TODO: push notification
             // Send push notification when there is only one person in chat room
             console.log('======== PUSH NOTIFICATION ========');
-            User.getFCMTokenByAlias(param.to, (err, token) => {
-              if(err) {
-                console.error(err);
-                return;
-              }        
-
-              const message = {
-                registration_ids: [token],
-                notification: {
-                  title: 'title',
-                  text: 'text',
-                  //icon: ''
-                }
-              };
-
-              fcm.send(message, (err, results) => {
-                if(err) {
-                  console.error(err);
-                  return;                                  
-                }
-
-                console.log('FCM success: ', results);
-              });
-            });
+            pushMessage(param);
           }).catch(err => {
             if (err) {
               console.error('saveChatMessage error:', err.stack);

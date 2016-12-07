@@ -348,6 +348,29 @@ User.login = (email, callback) => {
   });
 };
 
+User.editToken = (u_id, sns_token, fcm_token, callback) => {
+  pool.getConnection((err, conn) => {
+    if (err) {
+      return callback(err);
+    }
+
+    let param = {};
+    if (sns_token) param.sns_token = sns_token;
+    if (fcm_token) param.fcm_token = fcm_token;
+
+    let sql = 'UPDATE User SET ? WHERE u_id = ?';
+    conn.query(sql, [param, u_id], (err, result) => {
+      if (err) {
+        conn.release();
+        return callback(err);
+      }
+
+      conn.release();
+      return callback(null, null);
+    });
+  });
+};
+
 /**
  * This is function for unit test 
  */

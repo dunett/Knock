@@ -2,12 +2,20 @@ const FCM = require('fcm-push');
 const fcm = new FCM(process.env.FCM_KEY);
 
 // const message = {
-//    registration_ids : [device1],
-//    notification : {
-//       title : '메세지 제목',
-//       text : 'FCM 메세지 내용',
-//       icon : 'ic_football'
-//    }
-//};
+//   to: token.fcm_token,
+//   //collapse_key: param.r_id,
+//   notification: {
+//     title: arg.from,
+//     text: arg.message,
+//   },
+// };
+
+// fcm.send(message, (err, response) => {
+//   if (err) {
+//     console.error("Something has gone wrong!");
+//   } else {
+//     console.log("Successfully sent with response: ", response);
+//   }
+// });
 
 module.exports = fcm;
