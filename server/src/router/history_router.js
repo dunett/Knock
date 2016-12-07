@@ -11,7 +11,6 @@ router.route('/history/:u_id')
 router.route('/history/:u_id/each')
     .get(eachHistory);
 
-//나에게 노크한 사람
 router.route('/history/:u_id/me')
     .get(meHistory);
 

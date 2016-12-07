@@ -67,7 +67,7 @@ History.eachHistory = function(id, cb){
                 return cb(err, {msg: 'No result'});
             }
             for(var i=0; i<results.length; i++){
-                if(results[i].gender = 1){
+                if(results[i].gender == 1){
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
                 }else{
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
@@ -92,7 +92,7 @@ History.meHistory = function(id, cb){
                 return cb(err, {msg: 'No result'});
             }
             for(var i=0; i<results.length; i++){
-                if(results[i].gender = 1){
+                if(results[i].gender == 1){
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
                 }else{
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
@@ -116,7 +116,7 @@ History.youHistory = function(id, cb){
                 return cb(err, {msg: 'No result'});
             }
             for(var i=0; i<results.length; i++){
-                if(results[i].gender = 1){
+                if(results[i].gender == 1){
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
                 }else{
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
@@ -139,7 +139,7 @@ History.pastHistory = function(id, cb){
                 return cb(err, {msg: 'No result'});
             }
             for(var i=0; i<results.length; i++){
-                if(results[i].gender = 1){
+                if(results[i].gender == 1){
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
                 }else{
                     results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
