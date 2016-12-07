@@ -3,6 +3,7 @@ const pool = require('./dbConnection');
 class Key {
 }
 
+// 열쇠내역 보기
 Key.showKey = function(id, cb){
     pool.getConnection(function (err, conn){
         const sql = 'SELECT money FROM User where u_id = ?';
@@ -18,7 +19,7 @@ Key.showKey = function(id, cb){
     })
 }
 
-// 머니변동내역
+// 열쇠변동 + 열쇠사용내역 저장
 Key.chgKey = function(info, cb){
     pool.getConnection(function (err, conn) {
         conn.beginTransaction(function (err) {

@@ -59,12 +59,19 @@ History.eachHistory = function(id, cb){
         if(err){
             console.log(err);
         }
-        const sql = 'SELECT r_id, u_id, age, alias, thumbnail, favor_r as favor, see FROM User u, Relation r WHERE u.u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1) AND u.u_id = r.receiver union  SELECT r_id, u_id, age, alias, thumbnail, favor_s as favor, see FROM User u, Relation r WHERE u.u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 1) AND u.u_id = r.sender;';
+        const sql = 'SELECT r_id, u_id, age, alias, image, favor_r as favor, see, gender FROM User u, Relation r, Characters c WHERE u.u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1) AND u.u_id = r.receiver AND u.c_id = c.c_id union SELECT r_id, u_id, age, alias, image, favor_s as favor, see, gender FROM User u, Relation r, Characters c WHERE u.u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 1) AND u.u_id = r.sender AND u.c_id = c.c_id';
         conn.query(sql, [id, id], (err, results) =>{
             var three;
             const cnt = results.length;
             if(cnt == 0){
                 return cb(err, {msg: 'No result'});
+            }
+            for(var i=0; i<results.length; i++){
+                if(results[i].gender = 1){
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
+                }else{
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
+                }
             }
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
@@ -77,12 +84,19 @@ History.eachHistory = function(id, cb){
 History.meHistory = function(id, cb){
     pool.getConnection(function(err, conn){
         //const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0)';
-        const sql = 'SELECT r_id, u_id, age, alias, thumbnail, see FROM User u, Relation r WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0 order by date desc) and u.u_id = r.sender order by r.date desc'
+        const sql = 'SELECT r_id, u_id, age, alias, image, gender, see FROM User u, Relation r, Characters c WHERE u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 0) and u.u_id = r.sender and u.c_id = c.c_id order by r.date desc'
         conn.query(sql, id, (err, results) =>{
             var three = "[{";
             const cnt = results.length;
             if(cnt == 0){
                 return cb(err, {msg: 'No result'});
+            }
+            for(var i=0; i<results.length; i++){
+                if(results[i].gender = 1){
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
+                }else{
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
+                }
             }
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
@@ -95,11 +109,18 @@ History.meHistory = function(id, cb){
 History.youHistory = function(id, cb){
     pool.getConnection(function(err, conn){
         //const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM Relation WHERE sender = 1 AND relation = 0)';
-        const sql = 'SELECT r_id, u_id, age, alias, thumbnail, see FROM User u, Relation r WHERE u_id in (SELECT sender FROM Relation WHERE sender = ? AND relation = 0 order by date desc) and u.u_id = r.sender order by r.date desc'
+        const sql = 'SELECT r_id, u_id, age, alias, image, gender FROM User u, Relation r, Characters c WHERE u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 0) and u.u_id = r.receiver and u.c_id = c.c_id order by r.date desc'
         conn.query(sql, id, (err, results) =>{
             const cnt = results.length;
             if(cnt == 0){
                 return cb(err, {msg: 'No result'});
+            }
+            for(var i=0; i<results.length; i++){
+                if(results[i].gender = 1){
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
+                }else{
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
+                }
             }
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
@@ -111,11 +132,18 @@ History.youHistory = function(id, cb){
 //지나간 사람
 History.pastHistory = function(id, cb){
     pool.getConnection(function(err, conn){
-        const sql = 'SELECT u_id, age, alias, thumbnail FROM User WHERE u_id in (SELECT receiver FROM (SELECT receiver FROM Destiny WHERE sender = ? AND DATEDIFF(now(),date) < 7) A LEFT JOIN (SELECT receiver as sender FROM Relation WHERE sender = ? union SELECT sender FROM Relation WHERE receiver = ?) B ON A.receiver = B.sender)';
+        const sql = 'SELECT r_id, u_id, age, alias, image, favor_r as favor, see, gender FROM User u, Relation r, Characters c WHERE u.u_id in (SELECT receiver FROM Relation WHERE sender = ? AND relation = 1) AND u.u_id = r.receiver AND u.c_id = c.c_id union SELECT r_id, u_id, age, alias, image, favor_s as favor, see, gender FROM User u, Relation r, Characters c WHERE u.u_id in (SELECT sender FROM Relation WHERE receiver = ? AND relation = 1) AND u.u_id = r.sender AND u.c_id = c.c_id';
         conn.query(sql, [id, id, id], (err, results) =>{
             const cnt = results.length;
             if(cnt == 0){
                 return cb(err, {msg: 'No result'});
+            }
+            for(var i=0; i<results.length; i++){
+                if(results[i].gender = 1){
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/man_icn/thumbnail/'+results[i].image;
+                }else{
+                    results[i].image = 'https://s3.ap-northeast-2.amazonaws.com/tacademy-knock/image/woman_icn/thumbnail/'+results[i].image;
+                }
             }
             var three = results.slice(0,3);
             var other = results.slice(3,results.length);
